@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/viewContainer"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/windowBackground"
+android:gravity="center"
+tools:context="org.company.tasktrack.Activities.LoginActivity">
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_login"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_horizontal"
+            android:inputType="textCapWords"
+            android:paddingLeft="@dimen/_40sdp"
+            android:paddingRight="@dimen/_40sdp"
+            android:text="@string/app_name"
+            android:textSize="@dimen/_17ssp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="@dimen/_270sdp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/_30ssp"
+            android:paddingTop="@dimen/_30ssp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/usernameLayout"
+                android:hint="Username">
+
+                <EditText
+                    android:id="@+id/inputUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:fontFamily="sans-serif-light"
+
+                    android:padding="@dimen/_5sdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_15ssp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/passwordLayout"
+                android:hint="Password"
+                app:passwordToggleEnabled="true">
+
+                <EditText
+                    android:id="@+id/inputPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:fontFamily="sans-serif-light"
+
+                    android:inputType="textPassword"
+                    android:padding="@dimen/_5sdp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/_15ssp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_25sdp"
+                android:background="@color/colorAccentDark"
+                android:text="LOGIN"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_14ssp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
+</RelativeLayout>
