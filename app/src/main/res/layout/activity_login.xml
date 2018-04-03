@@ -70,7 +70,6 @@ tools:context="org.company.tasktrack.Activities.LoginActivity">
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:fontFamily="sans-serif-light"
-
                     android:inputType="textPassword"
                     android:padding="@dimen/_5sdp"
                     android:textCursorDrawable="@null"
