@@ -68,9 +68,6 @@ public class AdminActivity extends BaseActivity {
         String backStateName = fragment.getClass().getName();
         FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
-
-
-
         
         if (!fragmentPopped && manager.findFragmentByTag(backStateName) == null) {
             //fragment not in back stack, create it.
