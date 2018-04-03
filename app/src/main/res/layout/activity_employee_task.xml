@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.company.tasktrack.Activities.EmployeeTaskActivity">
+
+    <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+    >
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/layout"
+            android:orientation="vertical"
+            >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title"
+        android:textSize="@dimen/_18ssp"
+        android:gravity="left"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-light"
+        android:id="@+id/taskTitle"
+        android:paddingLeft="@dimen/_10sdp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:text="Task Description"
+        android:id="@+id/taskDesc"
+        android:textSize="@dimen/_13ssp"
+        android:padding="@dimen/_10sdp"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/imagesList"
+        android:padding="@dimen/_10sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_7sdp"
+        />
+        </LinearLayout>
+</ScrollView>
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccentDark"
+        android:text="Task Completed"
+        android:id="@+id/taskCompleted"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_13ssp"
+        android:gravity="center"
+        />
+</RelativeLayout>

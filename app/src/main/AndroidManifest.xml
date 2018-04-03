@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.company.tasktrack">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,19 +19,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.EmployeeActivity" />
+        <activity
+            android:name=".Activities.EmployeeActivity"
+            android:label="@string/title_activity_employee"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.TaskTrack" />
         <activity
             android:name=".Activities.AdminActivity"
             android:label="@string/title_activity_admin"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/Theme.TaskTrack" />
         <activity
             android:name=".Activities.ManagerActivity"
             android:label="@string/title_activity_manager"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/Theme.TaskTrack" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c67cdcdf4597d2df72fc6754ba82a86200f11035" />
+
+        <activity android:name=".Activities.EmployeeTaskActivity"></activity>
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

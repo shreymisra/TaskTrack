@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TaskTrack</string>
     <string name="title_activity_admin">AdminActivity</string>
+    <string name="title_activity_employee">EmployeeeActivity</string>
     <string name="title_add">Add Employees</string>
     <string name="title_manage">Manage Employees</string>
     <string name="title_reports">Reports</string>
