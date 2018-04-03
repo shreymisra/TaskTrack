@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_chrome_reader_mode_black_24dp"
         android:title="@string/title_home" />
     <item
-        android:id="@+id/navigation_reports"
+        android:id="@+id/navigation_reports2"
         android:icon="@drawable/ic_insert_chart_black_24dp"
         android:title="@string/title_reports" />
 </menu>

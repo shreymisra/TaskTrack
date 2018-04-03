@@ -26,6 +26,10 @@
             android:name=".Activities.ManagerActivity"
             android:label="@string/title_activity_manager"
             android:theme="@style/AppTheme"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c67cdcdf4597d2df72fc6754ba82a86200f11035" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
