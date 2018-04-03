@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import org.company.tasktrack.R;
 
-public class AdminActivity extends AppCompatActivity {
+public class AdminActivity extends BaseActivity {
 
     private TextView mTextMessage;
 

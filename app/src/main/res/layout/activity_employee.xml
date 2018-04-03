@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/windowBackground">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        app:cardBackgroundColor="@color/white"
+        >
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Assigned Tasks"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/colorAccentDark"
+            android:gravity="center"
+            android:textSize="@dimen/_18ssp"
+            android:layout_gravity="center"
+            />
+    </android.support.v7.widget.CardView>
+<android.support.v7.widget.RecyclerView
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:id="@+id/taskList"
+    />
+
+</LinearLayout>
