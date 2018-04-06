@@ -2,8 +2,9 @@ package org.company.tasktrack.Application;
 
 
 public class Config {
-    public static final String DB_NAME = "HRMS";
+    public static final String DB_NAME = "TaskTrack";
     public static final String DB_SESSION = "Db.session";
+    public static final String DB_TOKEN = "Db.token";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String DATE_FORMAT_2 = "dd-MM-yyyy";
     public static final String DB_ATT_LIST_KEY = "dbattlist";

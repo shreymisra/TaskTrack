@@ -3,6 +3,7 @@ package org.company.tasktrack.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -50,7 +51,8 @@ public class DbHandler {
     }
 
     public static void put(String key, Object obj) {
-        put(key, gson.toJson(obj));
+        Log.e("object",obj.toString());
+        put(key, gson.toJson(obj.toString()));
     }
 
     public static void putList(String key, ArrayList<Object> objArray) {

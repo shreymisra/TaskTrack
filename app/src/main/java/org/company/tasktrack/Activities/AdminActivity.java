@@ -7,9 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
 
-import org.company.tasktrack.Fragments.AddEmployeeFragment;
-import org.company.tasktrack.Fragments.ManageEmployeeFragment;
-import org.company.tasktrack.Fragments.ReportFragment;
+import org.company.tasktrack.Fragments.Admin.AddEmployeeFragment;
+import org.company.tasktrack.Fragments.Admin.ManageEmployeeFragment;
+import org.company.tasktrack.Fragments.Admin.AdminReportFragment;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.BottomNavigationViewHelper;
 
@@ -33,7 +33,7 @@ public class AdminActivity extends BaseActivity {
                 replaceFragment(new ManageEmployeeFragment());
                 break;
             case R.id.navigation_reports:
-                replaceFragment(new ReportFragment());
+                replaceFragment(new AdminReportFragment());
                 break;
         }
         return true;
@@ -60,7 +60,7 @@ public class AdminActivity extends BaseActivity {
             navigation.getMenu().getItem(0).setChecked(true);
         else if (className.equals(ManageEmployeeFragment.class.getName()))
             navigation.getMenu().getItem(1).setChecked(true);
-        else if (className.equals(ReportFragment.class.getName()))
+        else if (className.equals(AdminReportFragment.class.getName()))
             navigation.getMenu().getItem(2).setChecked(true);
     }
 
@@ -68,7 +68,7 @@ public class AdminActivity extends BaseActivity {
         String backStateName = fragment.getClass().getName();
         FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
-        
+
         if (!fragmentPopped && manager.findFragmentByTag(backStateName) == null) {
             //fragment not in back stack, create it.
             FragmentTransaction ft = manager.beginTransaction();
@@ -76,6 +76,16 @@ public class AdminActivity extends BaseActivity {
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.addToBackStack(backStateName);
             ft.commit();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if (count == 1) {
+           this.finishAffinity();
+        } else {
+            super.onBackPressed();
         }
     }
 

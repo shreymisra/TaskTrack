@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 
 public class EmployeeTaskListAdapter extends RecyclerView.Adapter<EmployeeTaskListAdapter.viewHolder> {
    Context context;
+   int i=1;
    public EmployeeTaskListAdapter(Context context){
       this.context=context;
    }
@@ -33,6 +34,8 @@ public class EmployeeTaskListAdapter extends RecyclerView.Adapter<EmployeeTaskLi
 
     @Override
     public void onBindViewHolder(EmployeeTaskListAdapter.viewHolder holder, int position) {
+       holder.sno.setText(String.valueOf(i));
+       i++;
         holder.taskCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,7 +46,7 @@ public class EmployeeTaskListAdapter extends RecyclerView.Adapter<EmployeeTaskLi
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 10;
     }
     public class viewHolder extends RecyclerView.ViewHolder{
 

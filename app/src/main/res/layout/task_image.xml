@@ -6,6 +6,7 @@
 
     <ImageView
         android:layout_width="wrap_content"
+        android:id="@+id/taskImage"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_add_a_photo_black_24dp"
         />

@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">TaskTrack</string>
     <string name="title_activity_admin">Administrator</string>
-    <string name="title_activity_employee">Manager</string>
+    <string name="title_activity_employee">Employee</string>
     <string name="title_add">Add Employees</string>
     <string name="title_manage">Manage Employees</string>
     <string name="title_reports">Reports</string>
-    <string name="title_activity_manager">Employee</string>
+    <string name="title_activity_manager">Manager</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>

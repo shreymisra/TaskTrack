@@ -3,6 +3,7 @@ package org.company.tasktrack.Activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import org.company.tasktrack.Adapters.EmployeeTaskImagesAdapter;
 import org.company.tasktrack.R;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class EmployeeTaskActivity extends AppCompatActivity {
 
@@ -27,9 +29,11 @@ public class EmployeeTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_task);
 
+        ButterKnife.bind(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         imagesList.setLayoutManager(new GridLayoutManager(this,3));
-        imagesList.setAdapter(new EmployeeTaskImagesAdapter());
+        imagesList.setAdapter(new EmployeeTaskImagesAdapter(this));
     }
 }

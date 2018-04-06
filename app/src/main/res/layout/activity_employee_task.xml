@@ -8,10 +8,11 @@
     tools:context="org.company.tasktrack.Activities.EmployeeTaskActivity">
 
     <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-        android:id="@+id/scrollView"
-    >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/taskCompleted"
+        android:id="@+id/scrollView">
+
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -56,6 +57,7 @@
         android:background="@color/colorAccentDark"
         android:text="Task Completed"
         android:id="@+id/taskCompleted"
+        android:fontFamily="sans-serif-light"
         android:textColor="@color/white"
         android:textSize="@dimen/_13ssp"
         android:gravity="center"
