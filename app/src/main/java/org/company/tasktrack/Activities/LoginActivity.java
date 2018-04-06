@@ -14,7 +14,9 @@ import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
 import org.company.tasktrack.Networking.Api.AccountApiManager;
+import org.company.tasktrack.Networking.Api.EmployeeApiManager;
 import org.company.tasktrack.Networking.Models.LoginRequestModal;
+import org.company.tasktrack.Networking.Models.UserInfoResponse;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
 
@@ -39,6 +41,16 @@ public class LoginActivity extends BaseActivity {
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        /*if(DbHandler.isSessionSet())
+        {
+            UserInfoResponse response=DbHandler.get("UserInfo",UserInfoResponse.class);
+            if(response.getData().getEmpType().equals("Employee"))
+                intentWithFinish(EmployeeApiManager.class);
+            else if(response.getData().getEmpType().equals("Manager"))
+                intentWithFinish(ManagerActivity.class);
+            else if(response.getData().getEmpType().equals("Admin"))
+                intentWithFinish(AdminActivity.class);
+        }*/
         progressDialog=new ProgressDialog(this);
     }
 
@@ -81,7 +93,7 @@ public class LoginActivity extends BaseActivity {
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                        dialogInterface.dismiss();
                                         }
-                                    });
+                                    }).show();
                         }
                         },e->{handleNetworkErrors(e,1);progressDialog.dismiss();})
 

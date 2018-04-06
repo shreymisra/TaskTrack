@@ -41,6 +41,7 @@ import retrofit2.HttpException;
  */
 
 public class BaseActivity extends AppCompatActivity {
+
     protected static MaterialDialog progressBar, alert;
     static Gson gson;
     public List<Disposable> disposables;
@@ -82,7 +83,8 @@ public class BaseActivity extends AppCompatActivity {
         disposables.add(
                 ReactiveNetwork.observeNetworkConnectivity(this)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(connectivity -> onNetworkChange(connectivity)));
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(connectivity -> onNetworkChange(connectivity)));
     }
 
     public void onNetworkChange(Connectivity connectivity) {

@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import org.company.tasktrack.R;
 
+import butterknife.ButterKnife;
+
 public class AdminReportFragment extends Fragment {
 
     View view;
@@ -22,6 +24,8 @@ public class AdminReportFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_report, container, false);
+        ButterKnife.bind(this,view);
+
         return view;
     }
 }

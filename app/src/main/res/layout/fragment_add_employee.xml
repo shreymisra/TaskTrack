@@ -1,16 +1,129 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="org.company.tasktrack.Fragments.Admin.AddEmployeeFragment">
 
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
+    <android.support.design.widget.TextInputLayout
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        app:tabGravity="fill"
-        app:tabMode="fixed" />
-</RelativeLayout>
+        android:layout_width="match_parent"
+        android:id="@+id/nameLayout"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:hint="Enter Name"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:fontFamily="sans-serif-light"
+            android:textCursorDrawable="@null"
+            android:maxLines="1"
+            android:hint="Enter Name"
+            android:drawableLeft="@drawable/ic_person_black_24dp"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/phoneLayout"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:hint="Enter Phone Number"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/phoneNumber"
+            android:maxLines="1"
+            android:textCursorDrawable="@null"
+            android:fontFamily="sans-serif-light"
+            android:drawableLeft="@drawable/ic_phone_black_24dp"
+            android:drawableStart="@drawable/ic_phone_black_24dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/emailLayout"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:hint="Enter Email"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/email"
+            android:fontFamily="sans-serif-light"
+            android:maxLines="1"
+            android:textCursorDrawable="@null"
+            android:inputType="textEmailAddress"
+            android:drawableLeft="@drawable/ic_email_black_24dp"
+            android:drawableStart="@drawable/ic_email_black_24dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/passLayout"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:hint="Enter Password"
+        app:passwordToggleEnabled="true"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/password"
+            android:fontFamily="sans-serif-light"
+            android:maxLines="1"
+            android:textCursorDrawable="@null"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/ic_mode_edit_black_24dp"
+            android:drawableLeft="@drawable/ic_mode_edit_black_24dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <RadioGroup
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:id="@+id/type"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        >
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manager"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/manager"
+            />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Employee"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/employee"
+            />
+    </RadioGroup>
+    <Button
+        android:id="@+id/addUser"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:background="@color/colorAccentDark"
+        android:text="Add"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_14ssp" />
+</LinearLayout>

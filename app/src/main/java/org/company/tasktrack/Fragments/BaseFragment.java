@@ -19,7 +19,7 @@ import org.company.tasktrack.Activities.BaseActivity;
 
 public class BaseFragment extends Fragment {
     public Observable<Connectivity> networkObservable;
-    List<Disposable> disposables;
+    public List<Disposable> disposables;
 
     public BaseFragment() {
         disposables = new ArrayList<>();

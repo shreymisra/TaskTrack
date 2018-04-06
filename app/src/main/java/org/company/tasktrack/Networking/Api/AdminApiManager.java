@@ -1,5 +1,6 @@
 package org.company.tasktrack.Networking.Api;
 
+import org.company.tasktrack.Networking.Models.AddUserModel;
 import org.company.tasktrack.Networking.Models.AddUserResponse;
 import org.company.tasktrack.Networking.Services.AddUserService;
 import org.company.tasktrack.Networking.TaskTrackApi;
@@ -23,11 +24,10 @@ public class AdminApiManager {
         return sInstance;
     }
 
-    public Observable<AddUserResponse> addEmployee()  {
-        return TaskTrackApi.getRetrofit().create(AddUserService.class).addUser()
+    public Observable<AddUserResponse> addEmployee(AddUserModel object)  {
+        return TaskTrackApi.getRetrofit().create(AddUserService.class).addUser(object)
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread());
-
     }
 
 }
