@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="@dimen/_4sdp">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/_10sdp"
+    android:weightSum="2"
+    >
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:text="Sno"
+        android:layout_gravity="center"
+        android:layout_weight="0.2"
+        android:textSize="@dimen/_15ssp"
+        android:id="@+id/sno"
+        />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:text="Name"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:textSize="@dimen/_15ssp"
+        android:layout_gravity="center"
+        android:layout_weight="1.6"
+        android:id="@+id/name"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/delete"
+        android:layout_weight="0.2"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/ic_delete_forever_black_24dp"
+        />
+</LinearLayout>
+</android.support.v7.widget.CardView>

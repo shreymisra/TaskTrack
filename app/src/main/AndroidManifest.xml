@@ -39,10 +39,11 @@
             android:name="io.fabric.ApiKey"
             android:value="c67cdcdf4597d2df72fc6754ba82a86200f11035" />
 
-        <activity android:name=".Activities.EmployeeTaskActivity"
+        <activity
+            android:name=".Activities.EmployeeTaskActivity"
             android:label="Your Task"
-            android:theme="@style/Theme.TaskTrack"
-            ></activity>
+            android:theme="@style/Theme.TaskTrack" />
+        <activity android:name=".Activities.ManagerEmployeeActivity"></activity>
     </application>
 
 </manifest>

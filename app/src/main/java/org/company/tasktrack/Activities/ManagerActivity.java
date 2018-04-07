@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.company.tasktrack.Fragments.Admin.AddEmployeeFragment;
-import org.company.tasktrack.Fragments.Admin.ManageEmployeeFragment;
+import org.company.tasktrack.Fragments.Admin.ManageFragment;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.BottomNavigationViewHelper;
 
@@ -55,7 +55,7 @@ public class ManagerActivity extends BaseActivity {
         String className = f.getClass().getName();
         if (className.equals(AddEmployeeFragment.class.getName()))
             navigation.getMenu().getItem(0).setChecked(true);
-        else if (className.equals(ManageEmployeeFragment.class.getName()))
+        else if (className.equals(ManageFragment.class.getName()))
             navigation.getMenu().getItem(1).setChecked(true);
     }
 

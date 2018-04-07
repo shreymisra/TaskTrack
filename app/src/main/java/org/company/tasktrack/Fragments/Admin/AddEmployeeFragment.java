@@ -93,18 +93,16 @@ public class AddEmployeeFragment extends BaseFragment {
             addUserModel.setEmail(email.getText().toString());
             addUserModel.setPassword(password.getText().toString());
             disposables.add(AdminApiManager.getInstance().addEmployee(addUserModel)
-                    .subscribe(addUserResponse -> {
-                       new AlertDialog.Builder(getContext())
-                               .setTitle("Message")
-                               .setMessage(addUserResponse.getMsg())
-                               .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                   @Override
-                                   public void onClick(DialogInterface dialogInterface, int i) {
-                                    clearData();
-                                    dialogInterface.dismiss();
-                                   }
-                               }).show();
-                    },e->handleNetworkErrors(e,1))
+                    .subscribe(addUserResponse -> new AlertDialog.Builder(getContext())
+                            .setTitle("Message")
+                            .setMessage(addUserResponse.getMsg())
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                 clearData();
+                                 dialogInterface.dismiss();
+                                }
+                            }).show())
             );
         }
     }

@@ -1,4 +1,4 @@
-package org.company.tasktrack.Adapters;
+package org.company.tasktrack.Adapters.Employee;
 
 import android.content.Context;
 import android.content.Intent;

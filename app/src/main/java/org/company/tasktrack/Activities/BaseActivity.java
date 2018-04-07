@@ -76,15 +76,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        networkObservable = ReactiveNetwork.observeNetworkConnectivity(this)
-                .filter(connectivity -> connectivity.isAvailable())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-        disposables.add(
-                ReactiveNetwork.observeNetworkConnectivity(this)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(connectivity -> onNetworkChange(connectivity)));
+
     }
 
     public void onNetworkChange(Connectivity connectivity) {

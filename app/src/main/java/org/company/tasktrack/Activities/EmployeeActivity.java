@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import org.company.tasktrack.Adapters.EmployeeTaskListAdapter;
+import org.company.tasktrack.Adapters.Employee.EmployeeTaskListAdapter;
 import org.company.tasktrack.R;
 
 import butterknife.BindView;

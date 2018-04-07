@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.company.tasktrack.Fragments.Admin.Manage_Employee">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="start|center"
+        android:paddingLeft="@dimen/_10sdp"
+        android:padding="@dimen/_7sdp"
+        android:text="Your Employees"
+        android:textColor="#FD808080"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:layout_width="match_parent"
+        android:id="@+id/employeeList"
+        />
+</LinearLayout>

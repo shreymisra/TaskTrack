@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
 
 import org.company.tasktrack.Fragments.Admin.AddEmployeeFragment;
-import org.company.tasktrack.Fragments.Admin.ManageEmployeeFragment;
+import org.company.tasktrack.Fragments.Admin.ManageFragment;
 import org.company.tasktrack.Fragments.Admin.AdminReportFragment;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.BottomNavigationViewHelper;
@@ -30,7 +30,7 @@ public class AdminActivity extends BaseActivity {
                 replaceFragment(new AddEmployeeFragment());
                 break;
             case R.id.navigation_manage:
-                replaceFragment(new ManageEmployeeFragment());
+                replaceFragment(new ManageFragment());
                 break;
             case R.id.navigation_reports:
                 replaceFragment(new AdminReportFragment());
@@ -58,7 +58,7 @@ public class AdminActivity extends BaseActivity {
         String className = f.getClass().getName();
         if (className.equals(AddEmployeeFragment.class.getName()))
             navigation.getMenu().getItem(0).setChecked(true);
-        else if (className.equals(ManageEmployeeFragment.class.getName()))
+        else if (className.equals(ManageFragment.class.getName()))
             navigation.getMenu().getItem(1).setChecked(true);
         else if (className.equals(AdminReportFragment.class.getName()))
             navigation.getMenu().getItem(2).setChecked(true);

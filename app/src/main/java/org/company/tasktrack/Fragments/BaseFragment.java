@@ -68,7 +68,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        networkObservable = ((BaseActivity) getActivity()).networkObservable;
     }
 
     @Override

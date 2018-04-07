@@ -1,19 +1,8 @@
 package org.company.tasktrack.Networking;
 
-import android.util.Base64;
-
-import org.company.tasktrack.Application.Config;
-import org.company.tasktrack.Application.MyApplication;
-import org.company.tasktrack.Networking.Models.ValidateResponse;
-import org.company.tasktrack.Utils.AddCookiesInterceptor;
 import org.company.tasktrack.Utils.DbHandler;
-import org.company.tasktrack.Utils.ReceivedCookiesInterceptor;
-import org.company.tasktrack.Utils.Utils;
-import okhttp3.Cache;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
