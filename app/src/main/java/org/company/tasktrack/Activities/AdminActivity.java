@@ -5,6 +5,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import org.company.tasktrack.Fragments.Admin.AddEmployeeFragment;
@@ -87,6 +89,22 @@ public class AdminActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile, menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.account:
+                intentWithoutFinish(AccountActivity.class);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

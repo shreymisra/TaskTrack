@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -26,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+
 import org.company.tasktrack.Application.MyApplication;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
+
 import okhttp3.Cache;
 import retrofit2.HttpException;
 
@@ -174,18 +173,13 @@ public class BaseActivity extends AppCompatActivity {
 
     public void invalidateSession() {
         getIntentExtras().putBoolean("sessionOut", true);
-        DbHandler.clearDb();
+        DbHandler.clearDb(getApplicationContext());
         intentWithFinish(LoginActivity.class);
     }
 
     public void logout() {
-        getIntentExtras().putBoolean("loggedOut", true);
-        try {
-            new Cache(MyApplication.context.getCacheDir(), 10 * 1024 * 1024).evictAll();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        DbHandler.clearDb();
+        getIntentExtras().putBoolean("isLoggedOut", true);
+        DbHandler.clearDb(getApplicationContext());
         intentWithFinish(LoginActivity.class);
     }
 

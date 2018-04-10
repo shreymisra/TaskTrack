@@ -21,7 +21,6 @@
             android:fontFamily="sans-serif-light"
             android:textCursorDrawable="@null"
             android:maxLines="1"
-            android:hint="Enter Name"
             android:drawableLeft="@drawable/ic_person_black_24dp"
             android:drawableStart="@drawable/ic_person_black_24dp"
             />

@@ -20,7 +20,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-        DbHandler.initialize(this);
+       // DbHandler.initialize(this);
         Utils.initialize(this);
     }
 }

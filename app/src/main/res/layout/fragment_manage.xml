@@ -15,7 +15,7 @@
         app:tabGravity="fill"
         app:tabMode="fixed" />
 
-    <kiet.edu.hrms.Utils.NonSwipeableViewPager
+    <org.company.tasktrack.Utils.NonSwipeableViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

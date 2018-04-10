@@ -3,8 +3,7 @@ package org.company.tasktrack.Networking.Services;
 import org.company.tasktrack.Networking.Models.LoginRequestModal;
 import org.company.tasktrack.Networking.Models.ValidateResponse;
 
-
-import io.reactivex.Observable;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
@@ -14,5 +13,5 @@ import retrofit2.http.POST;
 
 public interface LoginService  {
     @POST("authenticate")
-    Observable<ValidateResponse> validate(@Body LoginRequestModal object);
+    Call<ValidateResponse> validate(@Body LoginRequestModal object);
 }

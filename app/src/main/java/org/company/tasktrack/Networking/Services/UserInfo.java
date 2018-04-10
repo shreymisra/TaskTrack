@@ -3,6 +3,7 @@ package org.company.tasktrack.Networking.Services;
 import org.company.tasktrack.Networking.Models.UserInfoResponse;
 
 import io.reactivex.Observable;
+import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 
@@ -13,5 +14,5 @@ import retrofit2.http.POST;
 public interface UserInfo {
 
     @GET("memberinfo")
-    Observable<UserInfoResponse> infoResponse();
+    Call<UserInfoResponse> infoResponse();
 }

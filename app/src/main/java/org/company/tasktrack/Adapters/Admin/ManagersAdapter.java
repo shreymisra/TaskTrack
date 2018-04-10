@@ -28,7 +28,7 @@ public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHo
 
     @Override
     public ManagersAdapter.viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_image, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.manager_card, parent, false);
         return new viewHolder(view);
     }
 
@@ -60,7 +60,7 @@ public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(ManagerEmployeeActivity.class);
+               // context.startActivity(ManagerEmployeeActivity.class);
             }
         });
     }

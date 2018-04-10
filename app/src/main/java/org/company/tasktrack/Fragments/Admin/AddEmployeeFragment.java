@@ -1,5 +1,6 @@
 package org.company.tasktrack.Fragments.Admin;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -13,13 +14,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import org.company.tasktrack.Fragments.BaseFragment;
-import org.company.tasktrack.Networking.Api.AdminApiManager;
 import org.company.tasktrack.Networking.Models.AddUserModel;
+import org.company.tasktrack.Networking.Models.AddUserResponse;
+import org.company.tasktrack.Networking.ServiceGenerator;
+import org.company.tasktrack.Networking.Services.AddUserService;
 import org.company.tasktrack.R;
+import org.company.tasktrack.Utils.DbHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class AddEmployeeFragment extends BaseFragment {
@@ -51,6 +58,7 @@ public class AddEmployeeFragment extends BaseFragment {
     EditText password;
 
 
+    ProgressDialog progressDialog;
     AddUserModel addUserModel;
   public static AddEmployeeFragment newInstance(String param1, String param2) {
         AddEmployeeFragment fragment = new AddEmployeeFragment();
@@ -64,6 +72,7 @@ public class AddEmployeeFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_add_employee, container, false);
         ButterKnife.bind(this,view);
+        progressDialog=new ProgressDialog(getContext());
         addUserModel=new AddUserModel();
         type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -92,18 +101,40 @@ public class AddEmployeeFragment extends BaseFragment {
             addUserModel.setMobile(phoneNumber.getText().toString());
             addUserModel.setEmail(email.getText().toString());
             addUserModel.setPassword(password.getText().toString());
-            disposables.add(AdminApiManager.getInstance().addEmployee(addUserModel)
-                    .subscribe(addUserResponse -> new AlertDialog.Builder(getContext())
-                            .setTitle("Message")
-                            .setMessage(addUserResponse.getMsg())
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                 clearData();
-                                 dialogInterface.dismiss();
-                                }
-                            }).show())
-            );
+
+            progressDialog.setMessage("Adding User ...");
+            progressDialog.setTitle("Please Wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            AddUserService addUserService= ServiceGenerator.createService(AddUserService.class, DbHandler.getString(getContext(),"bearer","false"));
+            Call<AddUserResponse> call=addUserService.addUser(addUserModel);
+            call.enqueue(new Callback<AddUserResponse>() {
+                @Override
+                public void onResponse(Call<AddUserResponse> call, Response<AddUserResponse> response) {
+                    AddUserResponse addUserResponse=response.body();
+                    if(response.code()==200)
+                    {
+                            progressDialog.dismiss();
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("Message")
+                                    .setMessage(addUserResponse.getMsg())
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            clearData();
+                                            dialogInterface.dismiss();
+                                        }
+                                    }).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AddUserResponse> call, Throwable t) {
+                    progressDialog.dismiss();
+                    handleNetworkErrors(t,1);
+                }
+            });
         }
     }
 

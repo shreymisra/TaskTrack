@@ -1,141 +1,140 @@
 package org.company.tasktrack.Utils;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
-import android.util.Log;
+import android.os.Build;
+import android.os.Bundle;
 
-import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-
+import org.company.tasktrack.Activities.LoginActivity;
 import org.company.tasktrack.Application.Config;
-import org.company.tasktrack.Application.MyApplication;
 
 /**
  * Created by Anurag on 12-11-2016.
  */
 public class DbHandler {
-    static Context context;
-    static SharedPreferences prefs;
-    static Gson gson;
 
-    public static void initialize(MyApplication cntxt) {
-        context = (Context) cntxt;
-        prefs = getSharedPreferences();
-        gson = new Gson();
-    }
-
-    public static SharedPreferences getSharedPreferences() {
-        return context.getSharedPreferences(Config.DB_NAME, Context.MODE_PRIVATE);
-    }
-
-    public static void put(String Key, int value) {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(Key, value);
-        editor.commit();
-    }
-
-    public static void put(String Key, String value) {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Key, value);
-        editor.commit();
-    }
-
-    public static void put(String Key, Boolean value) {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(Key, value);
-        editor.commit();
-    }
-
-    public static void put(String key, Object obj) {
-        Log.e("object",obj.toString());
-        put(key, gson.toJson(obj.toString()));
-    }
-
-    public static void putList(String key, ArrayList<Object> objArray) {
-        ArrayList<String> objStrings = new ArrayList<String>();
-        for (Object obj : objArray) {
-            objStrings.add(gson.toJson(obj));
-        }
-        String[] myStringList = objStrings.toArray(new String[objStrings.size()]);
-        prefs.edit().putString(key, TextUtils.join("‚‗‚", myStringList)).apply();
-    }
-
-    public static void appendToList(String key, ArrayList<Object> objArray, Class c) {
-        objArray.addAll(getList(key, c));
-        ArrayList<String> objStrings = new ArrayList<String>();
-        for (Object obj : objArray) {
-            objStrings.add(gson.toJson(obj));
-        }
-        String[] myStringList = objStrings.toArray(new String[objStrings.size()]);
-        prefs.edit().putString(key, TextUtils.join("‚‗‚", myStringList)).apply();
-    }
-
-    public static Boolean contains(String key) {
-        return prefs.contains(key);
-    }
-
-    public static int get(String Key, int Alternate) {
-        return prefs.getInt(Key, Alternate);
-    }
-
-    public static String get(String Key, String Alternate) {
-        return prefs.getString(Key, Alternate);
-    }
-
-    public static Boolean get(String Key, Boolean Alternate) {
-        return prefs.getBoolean(Key, Alternate);
-    }
-
-    public static <T> T get(String key, Class<T> classOfT) {
-        String json = get(key, "");
-        Object value = gson.fromJson(json, classOfT);
-        if (value == null)
-            throw new NullPointerException();
-        return (T) value;
-    }
-
-    public static ArrayList<Object> getList(String key, Class<?> mClass) {
-        ArrayList<String> objStrings = new ArrayList<String>(Arrays.asList(TextUtils.split(prefs.getString(key, ""), "‚‗‚")));
-        ArrayList<Object> objects = new ArrayList<Object>();
-
-        for (String jObjString : objStrings) {
-            Object value = gson.fromJson(jObjString, mClass);
-            objects.add(value);
-        }
-        return objects;
-    }
-
-    public static void remove(String key) {
-        if (DbHandler.contains(key)) {
-            prefs.edit().remove(key).apply();
+    public static void putInt(Context context, String Key, int value) {
+        if (context != null) {
+            SharedPreferences prefs;
+            prefs = context.getSharedPreferences(Config.DB_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(Key, value);
+            editor.commit();
         }
     }
 
-    public static void clearDb() {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.commit();
+    public static void putString(Context context, String Key, String value) {
+        if (context != null) {
+            SharedPreferences prefs;
+            prefs = context.getSharedPreferences(Config.DB_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(Key, value);
+            editor.commit();
+        }
+    }
+
+    public static void putBoolean(Context context, String Key, Boolean value) {
+        if (context != null) {
+            SharedPreferences prefs;
+            prefs = context.getSharedPreferences(Config.DB_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(Key, value);
+            editor.commit();
+        }
+    }
+
+    public static Boolean contains(Context context, String key){
+        if (context != null) {
+            SharedPreferences prefs;
+            prefs = context.getSharedPreferences(Config.DB_NAME, Context.MODE_PRIVATE);
+            return prefs.contains(key);
+        } else return null;
+    }
+
+    public static int getInt(Context context, String Key, int Alternate) {
+        if (context != null) {
+            SharedPreferences prefs;
+            prefs = context.getSharedPreferences(Config.DB_NAME, Context.MODE_PRIVATE);
+
+            return prefs.getInt(Key, Alternate);
+        } else return 0;
+    }
+
+    public static String getString(Context context, String Key, String Alternate) {
+        if (context != null) {
+            SharedPreferences prefs;
+            prefs = context.getSharedPreferences(Config.DB_NAME, Context.MODE_PRIVATE);
+            return prefs.getString(Key, Alternate);
+        } else return null;
+    }
+
+    public static Boolean getBoolean(Context context, String Key, Boolean Alternate) {
+        if (context != null) {
+            SharedPreferences prefs;
+            prefs = context.getSharedPreferences(Config.DB_NAME, Context.MODE_PRIVATE);
+            return prefs.getBoolean(Key, Alternate);
+        } else return false;
+    }
+    public static void remove(Context context, String key){
+        if(context!=null){
+            SharedPreferences prefs;
+            prefs=context.getSharedPreferences(Config.DB_NAME, Context.MODE_PRIVATE);
+            if(DbHandler.contains(context,key)) {
+                prefs.edit().remove(key).commit();
+            }
+        }
+    }
+
+    public static void clearDb(Context context) {
+        if (context != null) {
+            SharedPreferences preferences = context.getSharedPreferences(Config.DB_NAME, 0);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+        }
+    }
+
+    public static void setSession(Context context, String userInfo) {
+        if (context != null) {
+           // FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+            DbHandler.putString(context, "UserInfo", userInfo);
+            DbHandler.putBoolean(context, "isLoggedIn", true);
+        }
     }
 
 
-    public static HashSet<String> getCookies() {
-        return (HashSet<String>) prefs.getStringSet("cookies", new HashSet<String>());
-    }
 
-    public static void setSession() {
-        put("sessionSet", true);
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static void unsetSession(Context context, String type) {
+        if (context != null) {
+           // FirebaseMessaging.getInstance().unsubscribeFromTopic(Config.TOPIC_GLOBAL);
+            DbHandler.clearDb(context);
+            DbHandler.putBoolean(context, "isLoggedIn", false);
+            Bundle b = new Bundle();
+            b.putBoolean(type, true);
+            Intent i = new Intent(context, LoginActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.putExtras(b);
+            context.startActivity(i);
+            ((Activity) context).finishAffinity();
+        }
     }
-
-    public static Boolean isSessionSet() {
-        return get("sessionSet", false);
-    }
-
-    public static boolean setCookies(HashSet<String> cookies) {
-        SharedPreferences.Editor editor = prefs.edit();
-        return editor.putStringSet("cookies", cookies).commit();
-    }
+    /*public static void update_unsetSession(Context context, String type) {
+        if (context != null) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(Config.TOPIC_GLOBAL);
+            DbHandler.clearDb(context);
+            DbHandler.putBoolean(context, "update", true);
+            Bundle b = new Bundle();
+            b.putBoolean(type, true);
+            Intent i = new Intent(context, LoginActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.putExtras(b);
+            context.startActivity(i);
+            ((Activity) context).finishAffinity();
+        }
+    }*/
 }

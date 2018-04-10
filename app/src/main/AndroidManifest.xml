@@ -13,13 +13,7 @@
         android:supportsRtl="true">
         <activity
             android:name=".Activities.LoginActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity
             android:name=".Activities.EmployeeActivity"
             android:label="@string/title_activity_employee"
@@ -34,16 +28,31 @@
             android:name=".Activities.ManagerActivity"
             android:label="@string/title_activity_manager"
             android:theme="@style/Theme.TaskTrack" />
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="c67cdcdf4597d2df72fc6754ba82a86200f11035" />
-
         <activity
             android:name=".Activities.EmployeeTaskActivity"
             android:label="Your Task"
             android:theme="@style/Theme.TaskTrack" />
-        <activity android:name=".Activities.ManagerEmployeeActivity"></activity>
+        <activity
+            android:name=".Activities.ManagerEmployeeActivity"
+            android:theme="@style/Theme.TaskTrack" />
+        <activity
+            android:name=".Activities.AdminDateWiseReport"
+            android:theme="@style/Theme.TaskTrack" />
+        <activity
+            android:name=".Activities.AdminDayWiseReport"
+            android:theme="@style/Theme.TaskTrack" />
+        <activity
+            android:name=".Activities.AccountActivity"
+            android:theme="@style/Theme.TaskTrack" />
+        <activity
+            android:name=".Activities.SplashActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
