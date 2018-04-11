@@ -2,6 +2,7 @@ package org.company.tasktrack.Adapters.Admin;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.company.tasktrack.Activities.ManagerEmployeeActivity;
 import org.company.tasktrack.Networking.Models.GetAllManagersResponse;
 import org.company.tasktrack.R;
 
@@ -64,7 +66,7 @@ public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // context.startActivity(ManagerEmployeeActivity.class);
+                context.startActivity(new Intent(context,ManagerEmployeeActivity.class));
             }
         });
     }

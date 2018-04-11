@@ -21,12 +21,7 @@ public class EmployeeActivity extends BaseActivity {
 
     @BindView(R.id.taskList)
     RecyclerView taskList;
-    @BindView(R.id.form_profile_image)
-    ImageView profileImage;
-    @BindView(R.id.employeeName)
-    TextView employeeName;
-    @BindView(R.id.employeeId)
-    TextView employeeId;
+
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout swipeRefreshLayout;
 

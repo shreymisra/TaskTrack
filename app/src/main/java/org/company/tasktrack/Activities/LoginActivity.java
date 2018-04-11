@@ -59,11 +59,11 @@ public class LoginActivity extends BaseActivity {
         progressDialog = new ProgressDialog(this);
 
         if (getIntentExtras().getBoolean("isLoggedOut", false)) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "You have been logged out", Snackbar.LENGTH_INDEFINITE);
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "You have been logged out", Snackbar.LENGTH_LONG);
             coloredSnackbar.confirm(snackbar).show();
         }
         if (getIntentExtras().getBoolean("isForcedLoggedOut", false)) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Your Session has Expired", Snackbar.LENGTH_INDEFINITE);
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Your Session has Expired", Snackbar.LENGTH_LONG);
             coloredSnackbar.alert(snackbar).show();
         }
 

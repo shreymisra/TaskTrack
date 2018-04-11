@@ -1,13 +1,26 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/windowBackground"
+    android:orientation="vertical"
     tools:context="org.company.tasktrack.Fragments.Manager.AssignTaskFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="start|center"
+        android:text="Today's Assigned Task"
+        android:textColor="#FD808080"
+        android:textStyle="bold" />
 
-</FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/assignedTasks"
+        />
+
+</LinearLayout>

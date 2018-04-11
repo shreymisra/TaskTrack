@@ -2,15 +2,25 @@ package org.company.tasktrack.Fragments.Manager;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.company.tasktrack.Adapters.Manager.ManagerAssignedTasksAdapter;
+import org.company.tasktrack.Fragments.BaseFragment;
 import org.company.tasktrack.R;
 
-public class AssignTaskFragment extends Fragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
+public class AssignTaskFragment extends BaseFragment {
+
+
+    @BindView(R.id.assignedTasks)
+    RecyclerView assignedTasks;
+    View view;
     public static AssignTaskFragment newInstance(String param1, String param2) {
         AssignTaskFragment fragment = new AssignTaskFragment();
         Bundle args = new Bundle();
@@ -22,7 +32,10 @@ public class AssignTaskFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_assign_task, container, false);
+        view=inflater.inflate(R.layout.fragment_assign_task, container, false);
+        ButterKnife.bind(this,view);
+        assignedTasks.setLayoutManager(new LinearLayoutManager(getContext()));
+        assignedTasks.setAdapter(new ManagerAssignedTasksAdapter(getContext()));
         return view;
     }
 }

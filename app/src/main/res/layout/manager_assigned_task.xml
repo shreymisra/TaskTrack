@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_6sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:padding="@dimen/_6sdp"
+    android:weightSum="2"
+    >
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1.7"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shrey Misra"
+            android:textStyle="bold"
+            android:id="@+id/name"
+            android:gravity="start|center"
+            android:padding="@dimen/_4sdp"
+            android:textSize="@dimen/_15ssp"
+            android:fontFamily="sans-serif-light"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TaskTitle"
+            android:gravity="start|center"
+            android:id="@+id/taskTitle"
+            android:padding="@dimen/_4sdp"
+            android:fontFamily="sans-serif-light"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Task Description"
+            android:gravity="start|center"
+            android:id="@+id/taskDescription"
+            android:padding="@dimen/_4sdp"
+            android:fontFamily="sans-serif-light"
+            />
+    </LinearLayout>
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="0.3"
+        android:id="@+id/status"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/ic_pending_24dp"
+        />
+</LinearLayout>
+</android.support.v7.widget.CardView>
