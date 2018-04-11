@@ -1,6 +1,8 @@
 package org.company.tasktrack.Activities;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,15 +10,30 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.company.tasktrack.Fragments.Admin.AddEmployeeFragment;
 import org.company.tasktrack.Fragments.Admin.ManageFragment;
 import org.company.tasktrack.Fragments.Admin.AdminReportFragment;
+import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
+import org.company.tasktrack.Networking.Models.GetAllManagersResponse;
+import org.company.tasktrack.Networking.Models.UserInfoResponse;
+import org.company.tasktrack.Networking.ServiceGenerator;
+import org.company.tasktrack.Networking.Services.GetAllEmployees;
+import org.company.tasktrack.Networking.Services.GetAllManagers;
+import org.company.tasktrack.Networking.Services.UserInfo;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.BottomNavigationViewHelper;
+import org.company.tasktrack.Utils.DbHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.GET;
 
 public class AdminActivity extends BaseActivity {
 
@@ -24,6 +41,7 @@ public class AdminActivity extends BaseActivity {
     BottomNavigationView navigation;
     @BindView(R.id.container)
     FrameLayout container;
+    Gson gson;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
@@ -48,12 +66,64 @@ public class AdminActivity extends BaseActivity {
         ButterKnife.bind(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
-
+        //UserInfoResponse response=gson.fromJson(DbHandler.getString(getApplicationContext(),"UserInfo",""),UserInfoResponse.class);
+        gson=new Gson();
         replaceFragment(new AddEmployeeFragment());
         getSupportFragmentManager()
                 .addOnBackStackChangedListener(
                         () -> updateBottomNavigationTitle(getSupportFragmentManager().findFragmentById(R.id.container))
                 );
+
+        if(!DbHandler.contains(getApplicationContext(),"Managers")) {
+            GetAllManagers managers = ServiceGenerator.createService(GetAllManagers.class, DbHandler.getString(getApplicationContext(), "bearer", ""));
+            Call<GetAllManagersResponse> managersResponse = managers.getAllManagers();
+            managersResponse.enqueue(new Callback<GetAllManagersResponse>() {
+                @Override
+                public void onResponse(Call<GetAllManagersResponse> call, Response<GetAllManagersResponse> response) {
+                    if (response.code() == 200) {
+                        GetAllManagersResponse allManagers = response.body();
+
+                        if (allManagers.getSuccess())
+                            DbHandler.putString(getApplicationContext(), "Managers", gson.toJson(allManagers));
+                        else
+                            Toast.makeText(getApplicationContext(), "Error Occured", Toast.LENGTH_LONG).show();
+
+                    } else if (response.code() == 403) {
+                        DbHandler.unsetSession(getApplicationContext(), "isForcedLoggedOut");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetAllManagersResponse> call, Throwable t) {
+                    handleNetworkErrors(t, -1);
+                }
+            });
+        }
+
+        if(!DbHandler.contains(getApplicationContext(),"Employees")) {
+            GetAllEmployees employees = ServiceGenerator.createService(GetAllEmployees.class, DbHandler.getString(getApplicationContext(), "bearer", ""));
+            Call<GetAllEmployeesResponse> employeesResponse = employees.getAllEmployees();
+            employeesResponse.enqueue(new Callback<GetAllEmployeesResponse>() {
+                @Override
+                public void onResponse(Call<GetAllEmployeesResponse> call, Response<GetAllEmployeesResponse> response) {
+                    if (response.code() == 200) {
+                        GetAllEmployeesResponse allEmployees = response.body();
+                        if (allEmployees.getSuccess())
+                            DbHandler.putString(getApplicationContext(), "Employees", gson.toJson(allEmployees));
+                        else
+                            Toast.makeText(getApplicationContext(), "Error Occured", Toast.LENGTH_LONG).show();
+                    } else if (response.code() == 403) {
+                        DbHandler.unsetSession(getApplicationContext(), "isForcedLoggedOut");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetAllEmployeesResponse> call, Throwable t) {
+                    handleNetworkErrors(t, -1);
+                }
+            });
+        }
+
     }
 
     public void updateBottomNavigationTitle(Fragment f) {
@@ -81,6 +151,7 @@ public class AdminActivity extends BaseActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();

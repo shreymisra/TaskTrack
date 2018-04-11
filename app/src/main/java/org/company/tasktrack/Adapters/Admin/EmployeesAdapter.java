@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
 import org.company.tasktrack.R;
 
 import butterknife.BindView;
@@ -22,9 +23,11 @@ import butterknife.ButterKnife;
 public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.viewHolder> {
 
     Context context;
-    public EmployeesAdapter(Context context)
+    GetAllEmployeesResponse response;
+    public EmployeesAdapter(Context context,GetAllEmployeesResponse response)
     {
         this.context=context;
+        this.response=response;
     }
     @Override
     public EmployeesAdapter.viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -34,8 +37,8 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.view
 
     @Override
     public void onBindViewHolder(EmployeesAdapter.viewHolder holder, int position) {
-        holder.sno.setText("1");
-        holder.name.setText("Shrey Misra");
+        holder.sno.setText(String.valueOf(position+1));
+        holder.name.setText(response.getEmployees().get(position).getName()+" ("+response.getEmployees().get(position).getEmpId()+")");
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,6 +48,7 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.view
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                               holder.itemView.setVisibility(View.GONE);
                                 dialogInterface.dismiss();
                             }
                         })
@@ -61,7 +65,7 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.view
 
     @Override
     public int getItemCount() {
-        return 10;
+        return response.getEmployees().size();
     }
 
     public class viewHolder extends RecyclerView.ViewHolder{

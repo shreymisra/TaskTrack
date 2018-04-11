@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.company.tasktrack.Networking.Models.GetAllManagersResponse;
 import org.company.tasktrack.R;
 
 import butterknife.BindView;
@@ -21,8 +22,10 @@ import butterknife.ButterKnife;
 
 public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHolder> {
     Context context;
-    public ManagersAdapter(Context context) {
+    GetAllManagersResponse response;
+    public ManagersAdapter(Context context, GetAllManagersResponse response) {
         this.context=context;
+        this.response=response;
 
     }
 
@@ -34,8 +37,8 @@ public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHo
 
     @Override
     public void onBindViewHolder(ManagersAdapter.viewHolder holder, int position) {
-        holder.sno.setText("1");
-        holder.name.setText("Shrey Misra");
+        holder.sno.setText(String.valueOf(position+1));
+        holder.name.setText(response.getManagers().get(position).getName()+" ("+response.getManagers().get(position).getEmpId()+")");
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,6 +48,7 @@ public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHo
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                holder.itemView.setVisibility(View.GONE);
                                 dialogInterface.dismiss();
                             }
                         })
@@ -67,7 +71,7 @@ public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHo
 
     @Override
     public int getItemCount() {
-        return 10;
+        return response.getManagers().size();
     }
     public class viewHolder extends RecyclerView.ViewHolder{
 

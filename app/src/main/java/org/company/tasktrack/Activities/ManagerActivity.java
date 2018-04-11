@@ -1,16 +1,21 @@
 package org.company.tasktrack.Activities;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.company.tasktrack.Fragments.Admin.AddEmployeeFragment;
 import org.company.tasktrack.Fragments.Admin.ManageFragment;
+import org.company.tasktrack.Fragments.Manager.AssignTaskFragment;
+import org.company.tasktrack.Fragments.Manager.ManagerReportFragment;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.BottomNavigationViewHelper;
 
@@ -30,10 +35,10 @@ public class ManagerActivity extends BaseActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_assignTask:
-                    mTextMessage.setText(R.string.title_home);
+                    replaceFragment(new AssignTaskFragment());
                     return true;
                 case R.id.navigation_reports2:
-                    mTextMessage.setText(R.string.title_dashboard);
+                    replaceFragment(new ManagerReportFragment());
                     return true;
             }
             return false;
@@ -48,6 +53,12 @@ public class ManagerActivity extends BaseActivity {
         ButterKnife.bind(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
+
+        replaceFragment(new AssignTaskFragment());
+        getSupportFragmentManager()
+                .addOnBackStackChangedListener(
+                        () -> updateBottomNavigationTitle(getSupportFragmentManager().findFragmentById(R.id.container))
+                );
 
     }
 
@@ -74,6 +85,7 @@ public class ManagerActivity extends BaseActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
@@ -82,6 +94,23 @@ public class ManagerActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile, menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.account:
+                intentWithoutFinish(AccountActivity.class);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

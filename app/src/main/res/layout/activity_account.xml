@@ -30,6 +30,16 @@
                 android:text="Administrator"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textSize="@dimen/_15sdp" />
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:fontFamily="sans-serif-light"
+                android:text="Shrey Misra"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="@dimen/_15sdp" />
 
             <TextView
                 android:id="@+id/email"
@@ -72,7 +82,6 @@
 
                 <TextView
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:fontFamily="sans-serif-light"

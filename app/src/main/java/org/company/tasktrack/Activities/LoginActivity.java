@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -105,10 +106,12 @@ public class LoginActivity extends BaseActivity {
                                                 intentWithFinish(ManagerActivity.class);
                                             else if (userInfoResponse.getData().getEmpType().equals("Employee"))
                                                 intentWithFinish(EmployeeActivity.class);
-                                        } else {
-                                            progressDialog.dismiss();
-                                            DbHandler.unsetSession(getApplicationContext(), "isForcedLoggedOut");
+                                        } else{
+                                            Toast.makeText(getApplicationContext(),response.message(),Toast.LENGTH_SHORT).show();
                                         }
+                                    }
+                                    else if(response.code()==403){
+                                        DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
                                     }
                                 }
 

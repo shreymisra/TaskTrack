@@ -13,15 +13,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.company.tasktrack.Activities.AdminDateWiseReport;
 import org.company.tasktrack.Activities.AdminDayWiseReport;
 import org.company.tasktrack.Fragments.BaseFragment;
+import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
 import org.company.tasktrack.R;
+import org.company.tasktrack.Utils.DbHandler;
 import org.company.tasktrack.Utils.SelectDateFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,10 +48,11 @@ public class AdminReportFragment extends BaseFragment {
     EditText date;
     @BindView(R.id.dayWise)
     Button dayWise;
-
+    Gson gson;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     SelectDateFragment dateFragment;
     ArrayList<String> employeesList=new ArrayList<String>();
+    HashMap<Integer,String> hm=new HashMap<Integer,String>();
     View view;
     public static AdminReportFragment newInstance(String param1, String param2) {
         AdminReportFragment fragment = new AdminReportFragment();
@@ -60,11 +66,15 @@ public class AdminReportFragment extends BaseFragment {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_report, container, false);
         ButterKnife.bind(this,view);
+        gson=new Gson();
+        GetAllEmployeesResponse allEmployees= gson.fromJson(DbHandler.getString(getContext(),"Employees",""),GetAllEmployeesResponse.class);
+        for(int i=0;i<allEmployees.getEmployees().size();i++)
+        {
+            employeesList.add(allEmployees.getEmployees().get(i).getName());
+            hm.put(allEmployees.getEmployees().get(i).getEmpId(),allEmployees.getEmployees().get(i).getName());
+        }
 
-        employeesList.add("Shrey Misra");
-        employeesList.add("Shivam Chaurasia");
-        employeesList.add("Suyash Yadav");
-        employeesList.add("Sooraj Shingari");
+
         Calendar from = Calendar.getInstance();
       Calendar to = Calendar.getInstance();
 
