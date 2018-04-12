@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/_7sdp"
+    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Shrey Misra"
+        android:id="@+id/name"
+        android:textSize="@dimen/_14ssp"
+        android:layout_toLeftOf="@+id/delete"
+        android:layout_alignParentLeft="true"
+        />
+
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:id="@+id/delete"
+        app:srcCompat="@drawable/ic_delete_forever_black_24dp"
+        />
+
+
+</RelativeLayout>

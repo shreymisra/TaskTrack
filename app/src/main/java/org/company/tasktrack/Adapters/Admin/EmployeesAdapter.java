@@ -9,12 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.company.tasktrack.Networking.Models.DeleteUserModel;
+import org.company.tasktrack.Networking.Models.DeleteUserResponse;
 import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
+import org.company.tasktrack.Networking.ServiceGenerator;
+import org.company.tasktrack.Networking.Services.DeleteUserService;
 import org.company.tasktrack.R;
+import org.company.tasktrack.Utils.DbHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by shrey on 8/4/18.
@@ -48,8 +57,32 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.view
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                               holder.itemView.setVisibility(View.GONE);
-                                dialogInterface.dismiss();
+                                DeleteUserModel object=new DeleteUserModel();
+                                object.setEmpId(String.valueOf(response.getEmployees().get(position).getEmpId()));
+                                DeleteUserService deleteUserService= ServiceGenerator.createService(DeleteUserService.class, DbHandler.getString(context,"bearer",""));
+                                Call<DeleteUserResponse> call=deleteUserService.deleteResponse(object);
+                                call.enqueue(new Callback<DeleteUserResponse>() {
+                                    @Override
+                                    public void onResponse(Call<DeleteUserResponse> call, Response<DeleteUserResponse> responseP) {
+                                        DeleteUserResponse deleteUserResponse=responseP.body();
+                                        if(responseP.code()==200){
+                                            if(deleteUserResponse.getSuccess()){
+                                                response.getEmployees().remove(position);
+                                                notifyDataSetChanged();
+                                            }
+                                            Toast.makeText(context,deleteUserResponse.getMsg(),Toast.LENGTH_LONG).show();
+                                        }
+                                        else{
+                                            DbHandler.unsetSession(context,"isForcedLoggedOut");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<DeleteUserResponse> call, Throwable t) {
+
+                                    }
+                                });
+
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

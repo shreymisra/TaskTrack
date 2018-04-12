@@ -3,6 +3,7 @@ package org.company.tasktrack.Adapters.Admin;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,13 +11,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.company.tasktrack.Activities.ManagerEmployeeActivity;
+import org.company.tasktrack.Networking.Models.DeleteUserModel;
+import org.company.tasktrack.Networking.Models.DeleteUserResponse;
 import org.company.tasktrack.Networking.Models.GetAllManagersResponse;
+import org.company.tasktrack.Networking.ServiceGenerator;
+import org.company.tasktrack.Networking.Services.DeleteUserService;
 import org.company.tasktrack.R;
+import org.company.tasktrack.Utils.DbHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by shrey on 8/4/18.
@@ -41,6 +51,7 @@ public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHo
     public void onBindViewHolder(ManagersAdapter.viewHolder holder, int position) {
         holder.sno.setText(String.valueOf(position+1));
         holder.name.setText(response.getManagers().get(position).getName()+" ("+response.getManagers().get(position).getEmpId()+")");
+
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,8 +61,31 @@ public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHo
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                holder.itemView.setVisibility(View.GONE);
-                                dialogInterface.dismiss();
+                                DeleteUserModel object=new DeleteUserModel();
+                                object.setEmpId(String.valueOf(response.getManagers().get(position).getEmpId()));
+                                DeleteUserService deleteUserService= ServiceGenerator.createService(DeleteUserService.class, DbHandler.getString(context,"bearer",""));
+                                Call<DeleteUserResponse> call=deleteUserService.deleteResponse(object);
+                                call.enqueue(new Callback<DeleteUserResponse>() {
+                                    @Override
+                                    public void onResponse(Call<DeleteUserResponse> call, Response<DeleteUserResponse> responseP) {
+                                       DeleteUserResponse userResponse=responseP.body();
+                                        if(responseP.code()==200){
+                                            if(userResponse.getSuccess()){
+                                                response.getManagers().remove(position);
+                                                notifyDataSetChanged();
+                                            }
+                                            Toast.makeText(context,userResponse.getMsg(),Toast.LENGTH_LONG).show();
+                                        }
+                                        else{
+                                            DbHandler.unsetSession(context,"isForcedLoggedOut");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<DeleteUserResponse> call, Throwable t) {
+
+                                    }
+                                });
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -66,7 +100,11 @@ public class ManagersAdapter extends RecyclerView.Adapter<ManagersAdapter.viewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context,ManagerEmployeeActivity.class));
+                Intent intent=new Intent(context,ManagerEmployeeActivity.class);
+                Bundle b=new Bundle();
+                b.putString("manager_id",String.valueOf(response.getManagers().get(position).getEmpId()));
+                intent.putExtras(b);
+                context.startActivity(intent);
             }
         });
     }

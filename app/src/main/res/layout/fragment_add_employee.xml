@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/phoneNumber"
             android:maxLines="1"
+            android:inputType="number"
             android:textCursorDrawable="@null"
             android:fontFamily="sans-serif-light"
             android:drawableLeft="@drawable/ic_phone_black_24dp"
