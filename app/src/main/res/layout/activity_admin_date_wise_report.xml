@@ -29,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
+            android:id="@+id/empName"
             android:textSize="@dimen/_13ssp"
             android:padding="@dimen/_3sdp"
             android:fontFamily="sans-serif-light"

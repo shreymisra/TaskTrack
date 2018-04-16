@@ -106,6 +106,9 @@ public class ManagerActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+            case R.id.notifications:
+                intentWithoutFinish(NotificationsActivity.class);
+                break;
             case R.id.account:
                 intentWithoutFinish(AccountActivity.class);
                 break;

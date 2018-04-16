@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.company.tasktrack.Adapters.Admin.AdminDateWiseAdapter;
+import org.company.tasktrack.Networking.Models.GetAssignedTaskResponse;
 import org.company.tasktrack.R;
 
 import butterknife.BindView;
@@ -21,6 +22,8 @@ public class AdminDateWiseReport extends BaseActivity {
     TextView fromDate;
     @BindView(R.id.toDate)
     TextView toDate;
+    @BindView(R.id.empName)
+    TextView empName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +35,17 @@ public class AdminDateWiseReport extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("Date Wise Report");
+        GetAssignedTaskResponse response=gson.fromJson(getIntentExtras().getString("AssignedTaskResponse"),GetAssignedTaskResponse.class);
+        String emp_id=getIntentExtras().getString("Emp_id");
+        String emp_name=getIntentExtras().getString("Emp_name");
+        String from=getIntentExtras().getString("From");
+        String to=getIntentExtras().getString("To");
+        empName.setText(emp_name+" ("+ emp_id+")");
+        fromDate.setText(from);
+        toDate.setText(to);
+
         tasks.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        tasks.setAdapter(new AdminDateWiseAdapter(getApplicationContext()));
+        tasks.setAdapter(new AdminDateWiseAdapter(this,response));
     }
 
     @Override

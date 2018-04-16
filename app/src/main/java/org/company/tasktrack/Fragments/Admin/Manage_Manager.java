@@ -69,7 +69,7 @@ public class Manage_Manager extends BaseFragment {
         return view;
     }
 
-    public void fetchData(){
+    public  void fetchData(){
         GetAllManagers managers = ServiceGenerator.createService(GetAllManagers.class, DbHandler.getString(getContext(), "bearer", ""));
         Call<GetAllManagersResponse> managersResponse = managers.getAllManagers();
         managersResponse.enqueue(new Callback<GetAllManagersResponse>() {

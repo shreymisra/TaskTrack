@@ -10,12 +10,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/windowBackground">
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="start|center"
+        android:padding="@dimen/_8sdp"
+        android:text="Your Pending Tasks"
+        android:background="@color/windowBackground"
+        android:textColor="#FD808080"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/_10sdp"
         android:id="@+id/taskList"
         />
 

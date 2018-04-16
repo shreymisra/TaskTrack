@@ -6,7 +6,7 @@
     <color name="colorAccentDark">#1565c0</color>
     <color name="red">#c62828</color>
     <color name="chipUnselected">#efefef</color>
-
+    <color name="bg_gray">#ecedef</color>
     <color name="windowBackground">#f5f5f5</color>
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>

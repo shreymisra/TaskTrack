@@ -1,6 +1,7 @@
 package org.company.tasktrack.Fragments.Admin;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -8,8 +9,10 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -56,7 +59,8 @@ public class AddEmployeeFragment extends BaseFragment {
     TextInputLayout passLayout;
     @BindView(R.id.password)
     EditText password;
-
+    @BindView(R.id.l1)
+    LinearLayout l1;
 
     ProgressDialog progressDialog;
     AddUserModel addUserModel;
@@ -74,6 +78,7 @@ public class AddEmployeeFragment extends BaseFragment {
         ButterKnife.bind(this,view);
         progressDialog=new ProgressDialog(getContext());
         addUserModel=new AddUserModel();
+
         type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -92,6 +97,8 @@ public class AddEmployeeFragment extends BaseFragment {
     @OnClick(R.id.addUser)
     public void addUser()
     {
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(l1.getWindowToken(), 0);
 
         int flag=checkDetails();
 
@@ -113,10 +120,15 @@ public class AddEmployeeFragment extends BaseFragment {
                 @Override
                 public void onResponse(Call<AddUserResponse> call, Response<AddUserResponse> response) {
                     AddUserResponse addUserResponse=response.body();
+                    progressDialog.dismiss();
                     if(response.code()==200)
                     {
-                            progressDialog.dismiss();
-                            new AlertDialog.Builder(getContext())
+                        clearData();
+                        Toast.makeText(getContext(), addUserResponse.getMsg(), Toast.LENGTH_LONG).show();
+                        if(addUserResponse.getSuccess()) {
+
+                                DbHandler.remove(getContext(), "Employees");
+                                }/* new AlertDialog.Builder(getContext())
                                     .setTitle("Message")
                                     .setMessage(addUserResponse.getMsg())
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -125,7 +137,9 @@ public class AddEmployeeFragment extends BaseFragment {
                                             clearData();
                                             dialogInterface.dismiss();
                                         }
-                                    }).show();
+                                    }).show();*/
+                    }else{
+                        DbHandler.unsetSession(getContext(),"isForcedLoggedOut");
                     }
                 }
 

@@ -33,6 +33,7 @@
             android:id="@+id/statusCard"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            app:cardCornerRadius="@dimen/_4sdp"
             app:cardBackgroundColor="@color/colorAccentDark"
             >
         <TextView
@@ -41,8 +42,8 @@
             android:text="Completed"
             android:layout_gravity="center"
             android:textColor="@color/white"
-            android:padding="@dimen/_4sdp"
-            android:textSize="@dimen/_13ssp"
+            android:padding="@dimen/_3sdp"
+            android:textSize="@dimen/_10ssp"
             android:fontFamily="sans-serif-light"
             android:id="@+id/status"
             />
@@ -52,19 +53,29 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="Date"
-        android:textSize="@dimen/_12ssp"
+        android:textSize="@dimen/_10ssp"
         android:fontFamily="sans-serif-light"
         android:id="@+id/date"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         />
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:text="Task description"
-        android:textSize="@dimen/_12ssp"
+        android:text="Assigned By -"
+        android:textSize="@dimen/_10ssp"
         android:fontFamily="sans-serif-light"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:id="@+id/description"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:id="@+id/assignedBy"
         />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Completed On -"
+        android:textSize="@dimen/_10ssp"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:id="@+id/completedOn"
+        />
+
 </LinearLayout>
 </android.support.v7.widget.CardView>

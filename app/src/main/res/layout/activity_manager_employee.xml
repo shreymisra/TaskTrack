@@ -20,7 +20,7 @@
         android:gravity="start|center"
         android:paddingLeft="@dimen/_10sdp"
         android:padding="@dimen/_7sdp"
-        android:text="Add Employees"
+        android:text="Add Employee"
         android:textColor="#FD808080"
         android:textStyle="bold" />
 

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "829420457723",
+    "firebase_url": "https://bkarogyam-318f0.firebaseio.com",
+    "project_id": "bkarogyam-318f0",
+    "storage_bucket": "bkarogyam-318f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:829420457723:android:bdde46f01a3d044a",
+        "android_client_info": {
+          "package_name": "org.company.tasktrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "829420457723-6dkr93svsd2csdekhetme2jhnemsfour.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5Vufw0nGX5W4e2aCJ1NXngpZ8_rQXE8I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

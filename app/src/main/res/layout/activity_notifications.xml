@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.company.tasktrack.Activities.NotificationsActivity">
+<LinearLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    >
+    <ImageView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:srcCompat="@drawable/bell"
+        android:scaleType="center"
+        android:visibility="gone"
+        android:id="@+id/bell"
+        android:layout_gravity="center"
+
+        />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_6sdp" />
+</LinearLayout>
+</android.support.constraint.ConstraintLayout>

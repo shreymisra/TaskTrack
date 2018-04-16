@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.company.tasktrack.Activities.AssignTaskActivity"
+    android:orientation="vertical"
+    android:id="@+id/layout"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="start|center"
+        android:paddingLeft="@dimen/_10sdp"
+        android:padding="@dimen/_7sdp"
+        android:text="Select Your Employee"
+        android:textColor="#FD808080"
+        android:textStyle="bold" />
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/employee"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:spinnerMode="dialog"
+        android:textAlignment="viewStart"
+        android:tooltipText="Select Grievance Type" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/filterChips"
+        android:padding="@dimen/_5sdp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <View
+        android:id="@+id/seperator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/bg_gray" />
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/taskTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        >
+
+        <EditText
+            android:id="@+id/taskTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
+            android:gravity="top"
+            android:padding="@dimen/_4ssp"
+            android:singleLine="false" />
+    </android.support.design.widget.TextInputLayout>
+    <View
+        android:id="@+id/seperator1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/bg_gray" />
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/taskDescLayout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:layout_height="wrap_content"
+        android:hint="Task Description">
+
+        <EditText
+            android:id="@+id/taskDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:fontFamily="sans-serif-light"
+            android:gravity="top"
+            android:minLines="5"
+            android:padding="@dimen/_4ssp"
+            android:singleLine="false" />
+    </android.support.design.widget.TextInputLayout>
+    <View
+        android:id="@+id/seperator2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/bg_gray" />
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/remarkLayout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:layout_height="wrap_content"
+        android:hint="Your Remark">
+
+        <EditText
+            android:id="@+id/remark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:fontFamily="sans-serif-light"
+            android:gravity="top"
+            android:minLines="2"
+            android:padding="@dimen/_4ssp"
+            android:singleLine="false" />
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>
+</ScrollView>

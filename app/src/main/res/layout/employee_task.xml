@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <LinearLayout
-            android:layout_height="@dimen/_60sdp"
+            android:layout_height="@dimen/_80sdp"
             android:layout_width="@dimen/_40sdp"
             android:layout_gravity="center"
             android:background="@color/colorAccentDark"
@@ -35,6 +35,7 @@
         android:layout_gravity="center"
         android:paddingLeft="@dimen/_10sdp"
         android:paddingRight="@dimen/_10sdp"
+        android:padding="@dimen/_10sdp"
         android:gravity="center"
         android:orientation="vertical"
         >
@@ -62,7 +63,7 @@
                 android:layout_alignParentEnd="true"
                 app:cardCornerRadius="@dimen/_4sdp"
                 app:cardBackgroundColor="@color/red"
-
+                android:id="@+id/priorityCard"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -78,11 +79,19 @@
         </RelativeLayout>
         <TextView
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_3sdp"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:text="Task Description"
-            android:id="@+id/taskDesc"
+            android:text="Assigned On - "
+            android:id="@+id/date"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="Assigned By - "
+            android:id="@+id/assignedBy"
             />
     </LinearLayout>
     </LinearLayout>

@@ -1,7 +1,11 @@
 package org.company.tasktrack.Fragments.Admin;
 
+import android.app.ProgressDialog;
+import android.app.Service;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +14,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import org.company.tasktrack.Activities.AdminDateWiseReport;
 import org.company.tasktrack.Activities.AdminDayWiseReport;
+import org.company.tasktrack.Adapters.Admin.EmployeesAdapter;
 import org.company.tasktrack.Fragments.BaseFragment;
 import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
+import org.company.tasktrack.Networking.Models.GetAssignedTaskModel;
+import org.company.tasktrack.Networking.Models.GetAssignedTaskResponse;
+import org.company.tasktrack.Networking.ServiceGenerator;
+import org.company.tasktrack.Networking.Services.GetAllEmployees;
+import org.company.tasktrack.Networking.Services.GetAssignedTasks;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
 import org.company.tasktrack.Utils.SelectDateFragment;
@@ -29,6 +40,9 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AdminReportFragment extends BaseFragment {
 
@@ -47,11 +61,15 @@ public class AdminReportFragment extends BaseFragment {
     @BindView(R.id.dayWise)
     Button dayWise;
     Gson gson;
+    GetAssignedTaskModel model;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     SelectDateFragment dateFragment;
     ArrayList<String> employeesList=new ArrayList<String>();
-    HashMap<Integer,String> hm=new HashMap<Integer,String>();
+    HashMap<String,Integer> hm=new HashMap<String,Integer>();
+    String empName="";
     View view;
+    ProgressDialog progressDialog;
+    GetAllEmployeesResponse allEmployees;
     public static AdminReportFragment newInstance(String param1, String param2) {
         AdminReportFragment fragment = new AdminReportFragment();
         return fragment;
@@ -64,24 +82,34 @@ public class AdminReportFragment extends BaseFragment {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_admin_report, container, false);
         ButterKnife.bind(this,view);
+        model=new GetAssignedTaskModel();
         gson=new Gson();
-        GetAllEmployeesResponse allEmployees= gson.fromJson(DbHandler.getString(getContext(),"Employees",""),GetAllEmployeesResponse.class);
+        progressDialog=new ProgressDialog(getContext());
+        employeesList=new ArrayList<String>();
+        hm=new HashMap<String,Integer>();
+        if(!DbHandler.contains(getContext(),"Employees")){
+            fetchData();
+        }else {
+           allEmployees=gson.fromJson(DbHandler.getString(getContext(),"Employees",""),GetAllEmployeesResponse.class);
+        }
+
+        //GetAllEmployeesResponse allEmployees= gson.fromJson(DbHandler.getString(getContext(),"Employees",""),GetAllEmployeesResponse.class);
         for(int i=0;i<allEmployees.getEmployees().size();i++)
         {
             employeesList.add(allEmployees.getEmployees().get(i).getName());
-            hm.put(allEmployees.getEmployees().get(i).getEmpId(),allEmployees.getEmployees().get(i).getName());
+            hm.put(allEmployees.getEmployees().get(i).getName(),allEmployees.getEmployees().get(i).getEmpId());
         }
 
 
         Calendar from = Calendar.getInstance();
-      Calendar to = Calendar.getInstance();
+        Calendar to = Calendar.getInstance();
 
         fromDate.setText(sdf.format(from.getTime()));
         toDate.setText(sdf.format(to.getTime()));
         date.setText(sdf.format(from.getTime()));
-        fromDate.setLongClickable(false);
-        toDate.setLongClickable(false);
-        date.setLongClickable(false);
+        //fromDate.setLongClickable(false);
+        //toDate.setLongClickable(false);
+        //date.setLongClickable(false);
         dateFragment = new SelectDateFragment();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, employeesList);
@@ -92,7 +120,8 @@ public class AdminReportFragment extends BaseFragment {
         empName1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                model.setEmpId(String.valueOf(hm.get(employeesList.get(i))));
+                empName=employeesList.get(i);
             }
 
             @Override
@@ -102,7 +131,7 @@ public class AdminReportFragment extends BaseFragment {
         });
         empName2.setAdapter(adapter);
         empName2.setPrompt("Select Employee");
-       empName2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        empName2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
            @Override
            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -169,12 +198,75 @@ public class AdminReportFragment extends BaseFragment {
 
     @OnClick(R.id.dateWise)
     public void dateWiseReport(){
-        intentWithoutFinish(AdminDateWiseReport.class);
+        progressDialog.setTitle("Generating Report");
+        progressDialog.setMessage("Please wait until we generate this report ... ");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        model.setTdate(toDate.getText().toString());
+        model.setFdate(fromDate.getText().toString());
+
+        GetAssignedTasks getAssignedTasks= ServiceGenerator.createService(GetAssignedTasks.class,DbHandler.getString(getContext(),"bearer",""));
+        Call<GetAssignedTaskResponse> call=getAssignedTasks.responseTasks(model);
+        call.enqueue(new Callback<GetAssignedTaskResponse>() {
+            @Override
+            public void onResponse(Call<GetAssignedTaskResponse> call, Response<GetAssignedTaskResponse> response) {
+                progressDialog.dismiss();
+                if(response.code()==200){
+                    GetAssignedTaskResponse getAssignedTaskResponse=response.body();
+                    if(getAssignedTaskResponse.getSuccess()){
+                        getIntentExtras().putString("AssignedTaskResponse",gson.toJson(getAssignedTaskResponse));
+                        getIntentExtras().putString("Emp_id",model.getEmpId());
+                        getIntentExtras().putString("Emp_name",empName);
+                        getIntentExtras().putString("From",fromDate.getText().toString());
+                        getIntentExtras().putString("To",toDate.getText().toString());
+                        intentWithoutFinish(AdminDateWiseReport.class);
+                    }
+                    else{
+                        Toast.makeText(getContext(),"Some Error Occured",Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }else if (response.code()==403){
+                    DbHandler.unsetSession(getContext(),"isForcedLoggedOut");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAssignedTaskResponse> call, Throwable t) {
+
+            }
+        });
+
     }
 
 
     @OnClick(R.id.dayWise)
     public void dayWiseReport(){
         intentWithoutFinish(AdminDayWiseReport.class);
+    }
+
+    public void fetchData(){
+        GetAllEmployees employees = ServiceGenerator.createService(GetAllEmployees.class, DbHandler.getString(getContext(), "bearer", ""));
+        Call<GetAllEmployeesResponse> employeesResponse = employees.getAllEmployees();
+        employeesResponse.enqueue(new Callback<GetAllEmployeesResponse>() {
+            @Override
+            public void onResponse(Call<GetAllEmployeesResponse> call, Response<GetAllEmployeesResponse> response) {
+                if (response.code() == 200) {
+                     allEmployees = response.body();
+                    if (allEmployees.getSuccess()) {
+                        DbHandler.putString(getContext(), "Employees", gson.toJson(allEmployees));
+                    }
+                    else
+                        Toast.makeText(getContext(), "Error Occured", Toast.LENGTH_LONG).show();
+                } else if (response.code() == 403) {
+                    DbHandler.unsetSession(getContext(), "isForcedLoggedOut");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAllEmployeesResponse> call, Throwable t) {
+                handleNetworkErrors(t, -1);
+            }
+        });
     }
 }

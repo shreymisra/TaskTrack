@@ -1,5 +1,9 @@
 package org.company.tasktrack.Activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -7,13 +11,18 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
+import org.company.tasktrack.Application.Config;
 import org.company.tasktrack.Fragments.Admin.AddEmployeeFragment;
 import org.company.tasktrack.Fragments.Admin.ManageFragment;
 import org.company.tasktrack.Fragments.Admin.AdminReportFragment;
@@ -27,6 +36,7 @@ import org.company.tasktrack.Networking.Services.UserInfo;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.BottomNavigationViewHelper;
 import org.company.tasktrack.Utils.DbHandler;
+import org.company.tasktrack.Utils.NotificationUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +52,8 @@ public class AdminActivity extends BaseActivity {
     @BindView(R.id.container)
     FrameLayout container;
     Gson gson;
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
@@ -64,6 +76,8 @@ public class AdminActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         ButterKnife.bind(this);
+        Log.e("id", FirebaseInstanceId.getInstance().getToken());
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
         //UserInfoResponse response=gson.fromJson(DbHandler.getString(getApplicationContext(),"UserInfo",""),UserInfoResponse.class);
@@ -74,6 +88,13 @@ public class AdminActivity extends BaseActivity {
                         () -> updateBottomNavigationTitle(getSupportFragmentManager().findFragmentById(R.id.container))
                 );
 
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                //DbHandler.putInt(DashboardActivity.this, "count", 1);
+                //invalidateOptionsMenu();
+            }
+        };
         if(!DbHandler.contains(getApplicationContext(),"Managers")) {
             GetAllManagers managers = ServiceGenerator.createService(GetAllManagers.class, DbHandler.getString(getApplicationContext(), "bearer", ""));
             Call<GetAllManagersResponse> managersResponse = managers.getAllManagers();
@@ -171,11 +192,27 @@ public class AdminActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+            case R.id.notifications:
+                intentWithoutFinish(NotificationsActivity.class);
+                break;
             case R.id.account:
                 intentWithoutFinish(AccountActivity.class);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION));
+
+        NotificationUtils.clearNotifications(getApplicationContext());
     }
 
 }
