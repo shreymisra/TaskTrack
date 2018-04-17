@@ -43,14 +43,14 @@ public class AdminDateWiseAdapter extends RecyclerView.Adapter<AdminDateWiseAdap
     @Override
     public void onBindViewHolder(AdminDateWiseAdapter.viewHolder holder, int position) {
         holder.taskTitle.setText(response.getTasks().get(position).getName());
-        holder.date.setText("Assigned On -"+response.getTasks().get(position).getAssignDate().substring(0,10));
+        holder.date.setText("Assigned On -"+response.getTasks().get(position).getAssignDate());
         holder.status.setText(response.getTasks().get(position).getTaskStatus());
         holder.assignedBy.setText("Assigned By -"+response.getTasks().get(position).getEmpDetails().get(0).getName()+" ("+response.getTasks().get(position).getEmpDetails().get(0).getEmpId()+")");
         if(response.getTasks().get(position).getComplete_date().equals("")){
             holder.completedOn.setVisibility(View.GONE);
         }
         else{
-            holder.completedOn.setText("Completed On-"+response.getTasks().get(position).getComplete_date().substring(0,10));
+            holder.completedOn.setText("Completed On-"+response.getTasks().get(position).getComplete_date());
         }
         if(response.getTasks().get(position).getTaskStatus().equals("PENDING"))
             holder.statusCard.setCardBackgroundColor(context.getResources().getColor(R.color.red));

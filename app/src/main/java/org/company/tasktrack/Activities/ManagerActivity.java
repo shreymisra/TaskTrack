@@ -12,15 +12,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.company.tasktrack.Fragments.Admin.AddEmployeeFragment;
 import org.company.tasktrack.Fragments.Admin.ManageFragment;
 import org.company.tasktrack.Fragments.Manager.AssignTaskFragment;
 import org.company.tasktrack.Fragments.Manager.ManagerReportFragment;
+import org.company.tasktrack.Networking.Models.FcmIdModel;
+import org.company.tasktrack.Networking.Models.FcmIdResponse;
+import org.company.tasktrack.Networking.ServiceGenerator;
+import org.company.tasktrack.Networking.Services.SendFcmId;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.BottomNavigationViewHelper;
+import org.company.tasktrack.Utils.DbHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ManagerActivity extends BaseActivity {
 
@@ -60,6 +70,7 @@ public class ManagerActivity extends BaseActivity {
                         () -> updateBottomNavigationTitle(getSupportFragmentManager().findFragmentById(R.id.container))
                 );
 
+        refreshFcmId();
     }
 
     public void updateBottomNavigationTitle(Fragment f) {
@@ -114,6 +125,37 @@ public class ManagerActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void refreshFcmId(){
+        String fcm= FirebaseInstanceId.getInstance().getToken();
+        if(!DbHandler.contains(this,"fcm_id")||!DbHandler.getString(this,"fcm_id","").equals(fcm)) {
+            FcmIdModel object = new FcmIdModel();
+            object.setFcm(fcm);
+            SendFcmId sendFcmId = ServiceGenerator.createService(SendFcmId.class, DbHandler.getString(this, "bearer", ""));
+            Call<FcmIdResponse> call = sendFcmId.sendId(object);
+            call.enqueue(new Callback<FcmIdResponse>() {
+                @Override
+                public void onResponse(Call<FcmIdResponse> call, Response<FcmIdResponse> response) {
+                    FcmIdResponse fcmIdResponse=response.body();
+                    if(response.code()==200){
+                        if(fcmIdResponse.isSuccess()){
+                            DbHandler.putString(getApplicationContext(),"fcm_id",fcm);
+                        }
+                        else{
+
+                        }
+
+                    }
+                    else{
+                        DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
+                    }
+                }
+                @Override
+                public void onFailure(Call<FcmIdResponse> call, Throwable t) {
+                    handleNetworkErrors(t,-1);
+                }
+            });
+        }
     }
 
 }

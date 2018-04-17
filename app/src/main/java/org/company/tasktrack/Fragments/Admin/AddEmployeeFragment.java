@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,20 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import org.company.tasktrack.Adapters.Admin.EmployeesAdapter;
+import org.company.tasktrack.Adapters.Admin.ManagersAdapter;
 import org.company.tasktrack.Fragments.BaseFragment;
 import org.company.tasktrack.Networking.Models.AddUserModel;
 import org.company.tasktrack.Networking.Models.AddUserResponse;
+import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
+import org.company.tasktrack.Networking.Models.GetAllManagersResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
 import org.company.tasktrack.Networking.Services.AddUserService;
+import org.company.tasktrack.Networking.Services.GetAllEmployees;
+import org.company.tasktrack.Networking.Services.GetAllManagers;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
 
@@ -64,6 +74,7 @@ public class AddEmployeeFragment extends BaseFragment {
 
     ProgressDialog progressDialog;
     AddUserModel addUserModel;
+    Gson gson;
   public static AddEmployeeFragment newInstance(String param1, String param2) {
         AddEmployeeFragment fragment = new AddEmployeeFragment();
         Bundle args = new Bundle();
@@ -78,7 +89,7 @@ public class AddEmployeeFragment extends BaseFragment {
         ButterKnife.bind(this,view);
         progressDialog=new ProgressDialog(getContext());
         addUserModel=new AddUserModel();
-
+        gson=new Gson();
         type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -126,18 +137,14 @@ public class AddEmployeeFragment extends BaseFragment {
                         clearData();
                         Toast.makeText(getContext(), addUserResponse.getMsg(), Toast.LENGTH_LONG).show();
                         if(addUserResponse.getSuccess()) {
-
-                                DbHandler.remove(getContext(), "Employees");
-                                }/* new AlertDialog.Builder(getContext())
-                                    .setTitle("Message")
-                                    .setMessage(addUserResponse.getMsg())
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            clearData();
-                                            dialogInterface.dismiss();
-                                        }
-                                    }).show();*/
+                                    if(addUserModel.getType().equals("Manager"))
+                                        fetchManagers();
+                                    else
+                                        fetchEmployees();
+                                }
+                                else{
+                            Toast.makeText(getContext(),"Some Error Occurred",Toast.LENGTH_SHORT).show();
+                        }
                     }else{
                         DbHandler.unsetSession(getContext(),"isForcedLoggedOut");
                     }
@@ -210,5 +217,63 @@ public class AddEmployeeFragment extends BaseFragment {
         email.setText("");
         password.setText("");
     }
+
+    public void fetchEmployees(){
+            GetAllEmployees employees = ServiceGenerator.createService(GetAllEmployees.class, DbHandler.getString(getContext(), "bearer", ""));
+            Call<GetAllEmployeesResponse> employeesResponse = employees.getAllEmployees();
+            employeesResponse.enqueue(new Callback<GetAllEmployeesResponse>() {
+                @Override
+                public void onResponse(Call<GetAllEmployeesResponse> call, Response<GetAllEmployeesResponse> response) {
+
+                    if (response.code() == 200) {
+                        GetAllEmployeesResponse allEmployees = response.body();
+                        if (allEmployees.getSuccess()) {
+                            DbHandler.remove(getContext(),"Employees");
+                            DbHandler.putString(getContext(), "Employees", gson.toJson(allEmployees));
+                        }
+                        else
+                            Toast.makeText(getContext(), "Error Occured", Toast.LENGTH_LONG).show();
+                    } else if (response.code() == 403) {
+                        DbHandler.unsetSession(getContext(), "isForcedLoggedOut");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetAllEmployeesResponse> call, Throwable t) {
+                    handleNetworkErrors(t, -1);
+                }
+            });
+
+    }
+
+    public void fetchManagers(){
+        GetAllManagers managers = ServiceGenerator.createService(GetAllManagers.class, DbHandler.getString(getContext(), "bearer", ""));
+        Call<GetAllManagersResponse> managersResponse = managers.getAllManagers();
+        managersResponse.enqueue(new Callback<GetAllManagersResponse>() {
+            @Override
+            public void onResponse(Call<GetAllManagersResponse> call, Response<GetAllManagersResponse> response) {
+
+                if (response.code() == 200) {
+                    GetAllManagersResponse allManagers = response.body();
+
+                    if (allManagers.getSuccess()) {
+                        DbHandler.remove(getContext(),"Managers");
+                        DbHandler.putString(getContext(), "Managers", gson.toJson(allManagers));
+                    }
+                    else
+                        Toast.makeText(getContext(), "Error Occured", Toast.LENGTH_LONG).show();
+
+                } else if (response.code() == 403) {
+                    DbHandler.unsetSession(getContext(), "isForcedLoggedOut");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAllManagersResponse> call, Throwable t) {
+                handleNetworkErrors(t, -1);
+            }
+        });
+    }
+
 
 }

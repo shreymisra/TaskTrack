@@ -104,6 +104,8 @@ public class AdminReportFragment extends BaseFragment {
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
 
+
+
         fromDate.setText(sdf.format(from.getTime()));
         toDate.setText(sdf.format(to.getTime()));
         date.setText(sdf.format(from.getTime()));
@@ -174,7 +176,7 @@ public class AdminReportFragment extends BaseFragment {
 
             @Override
             public void run() {
-                toDate.setClickable(true);
+                fromDate.setClickable(true);
             }
         }, 500);
         dateFragment.show(getFragmentManager(),sdf.format(calendar.getTime()), fromDate, "2018-01-01", "2050-01-01");

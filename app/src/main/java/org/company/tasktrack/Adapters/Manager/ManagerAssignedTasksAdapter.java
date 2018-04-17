@@ -46,9 +46,9 @@ public class ManagerAssignedTasksAdapter extends RecyclerView.Adapter<ManagerAss
     Context context;
     GetAssignedTaskResponse  response;
     Gson gson=new Gson();
-    SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd");
+    /*SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat sdf2=new SimpleDateFormat("dd-MM-yyyy");
-    public ManagerAssignedTasksAdapter(Context context,GetAssignedTaskResponse response){
+    */public ManagerAssignedTasksAdapter(Context context,GetAssignedTaskResponse response){
         this.context=context;
         this.response=response;
     }
@@ -68,31 +68,31 @@ public class ManagerAssignedTasksAdapter extends RecyclerView.Adapter<ManagerAss
        }
        else{
            holder.completeDate.setVisibility(View.VISIBLE);
-           holder.completeDate.setText("Completed On - "+response.getTasks().get(position).getComplete_date().substring(0,10));
+           holder.completeDate.setText("Completed On - "+response.getTasks().get(position).getComplete_date());
        }
-        Date date= null;
+       /* Date date= null;
         try {
             date = sdf1.parse(response.getTasks().get(position).getAssignDate().substring(0,10));
         } catch (ParseException e) {
             e.printStackTrace();
-        }
-        holder.date.setText("Assigned On - "+sdf2.format(date));
+        }*/
+        holder.date.setText("Assigned On - "+response.getTasks().get(position).getAssignDate());
 
         if(response.getTasks().get(position).getPriority()==0)
         {
-            holder.priority.setText("Low Priority");
+            holder.priority.setText("Low");
             holder.priorityCard.setBackgroundColor(context.getResources().getColor(R.color.green_dark));
             holder.priorityCard.setRadius(8);
         }
         else if(response.getTasks().get(position).getPriority()==1)
         {
-            holder.priority.setText("Average Priority");
+            holder.priority.setText("Average");
             holder.priorityCard.setBackgroundColor(context.getResources().getColor(R.color.black));
             holder.priorityCard.setRadius(6);
         }
         else if(response.getTasks().get(position).getPriority()==2)
         {
-            holder.priority.setText("High Priority");
+            holder.priority.setText("High");
             holder.priorityCard.setBackgroundColor(context.getResources().getColor(R.color.red));
             holder.priorityCard.setRadius(4);
         }
@@ -100,7 +100,10 @@ public class ManagerAssignedTasksAdapter extends RecyclerView.Adapter<ManagerAss
         if(response.getTasks().get(position).getTaskStatus().equals("PENDING"))
             holder.status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_pending_24dp));
         else
+        {
             holder.status.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_completed_24dp));
+            holder.delete.setVisibility(View.INVISIBLE);
+        }
 
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override

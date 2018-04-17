@@ -26,12 +26,15 @@ import org.company.tasktrack.Application.Config;
 import org.company.tasktrack.Fragments.Admin.AddEmployeeFragment;
 import org.company.tasktrack.Fragments.Admin.ManageFragment;
 import org.company.tasktrack.Fragments.Admin.AdminReportFragment;
+import org.company.tasktrack.Networking.Models.FcmIdModel;
+import org.company.tasktrack.Networking.Models.FcmIdResponse;
 import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
 import org.company.tasktrack.Networking.Models.GetAllManagersResponse;
 import org.company.tasktrack.Networking.Models.UserInfoResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
 import org.company.tasktrack.Networking.Services.GetAllEmployees;
 import org.company.tasktrack.Networking.Services.GetAllManagers;
+import org.company.tasktrack.Networking.Services.SendFcmId;
 import org.company.tasktrack.Networking.Services.UserInfo;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.BottomNavigationViewHelper;
@@ -77,6 +80,7 @@ public class AdminActivity extends BaseActivity {
         setContentView(R.layout.activity_admin);
         ButterKnife.bind(this);
         Log.e("id", FirebaseInstanceId.getInstance().getToken());
+        refreshFcmId();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
@@ -145,6 +149,38 @@ public class AdminActivity extends BaseActivity {
             });
         }
 
+    }
+
+    public void refreshFcmId(){
+        String fcm=FirebaseInstanceId.getInstance().getToken();
+        if(!DbHandler.contains(this,"fcm_id")||!DbHandler.getString(this,"fcm_id","").equals(fcm)) {
+            FcmIdModel object = new FcmIdModel();
+            object.setFcm(fcm);
+            SendFcmId sendFcmId = ServiceGenerator.createService(SendFcmId.class, DbHandler.getString(this, "bearer", ""));
+            Call<FcmIdResponse> call = sendFcmId.sendId(object);
+            call.enqueue(new Callback<FcmIdResponse>() {
+                @Override
+                public void onResponse(Call<FcmIdResponse> call, Response<FcmIdResponse> response) {
+                    FcmIdResponse fcmIdResponse=response.body();
+                    if(response.code()==200){
+                        if(fcmIdResponse.isSuccess()){
+                            DbHandler.putString(getApplicationContext(),"fcm_id",fcm);
+                        }
+                        else{
+
+                        }
+
+                    }
+                    else{
+                        DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
+                    }
+                }
+                @Override
+                public void onFailure(Call<FcmIdResponse> call, Throwable t) {
+                    handleNetworkErrors(t,-1);
+                }
+            });
+        }
     }
 
     public void updateBottomNavigationTitle(Fragment f) {

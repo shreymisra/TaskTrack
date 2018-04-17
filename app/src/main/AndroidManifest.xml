@@ -39,10 +39,13 @@
             android:theme="@style/Theme.TaskTrack" />
         <activity
             android:name=".Activities.AdminDateWiseReport"
-            android:theme="@style/Theme.TaskTrack" />
+            android:theme="@style/Theme.TaskTrack"
+            android:label="Date Wise Report"
+            />
         <activity
             android:name=".Activities.AdminDayWiseReport"
-            android:theme="@style/Theme.TaskTrack" />
+            android:theme="@style/Theme.TaskTrack"
+            android:label="Day Wise Report"/>
         <activity
             android:name=".Activities.AccountActivity"
             android:theme="@style/Theme.TaskTrack" />
@@ -57,9 +60,11 @@
         </activity>
         <activity
             android:name=".Activities.AssignTaskActivity"
-            android:theme="@style/Theme.TaskTrack" />
+            android:theme="@style/Theme.TaskTrack"
+            android:label="Assign Task"/>
         <activity android:name=".Activities.NotificationsActivity"
-            android:theme="@style/Theme.TaskTrack" />
+            android:theme="@style/Theme.TaskTrack"
+            android:label="Notifications"/>
 
         <service android:name=".NotificationService.MyFirebaseMessagingService">
             <intent-filter>

@@ -43,7 +43,7 @@ public class EmployeeTaskListAdapter extends RecyclerView.Adapter<EmployeeTaskLi
     @Override
     public void onBindViewHolder(EmployeeTaskListAdapter.viewHolder holder, int position) {
        holder.sno.setText(String.valueOf(position+1));
-        holder.date.setText("Assigned On - "+response.getTasks().get(position).getAssignDate().substring(0,10));
+        holder.date.setText("Assigned On - "+response.getTasks().get(position).getAssignDate());
         holder.taskTitle.setText(response.getTasks().get(position).getName());
         holder.assignedBy.setText("Assigned By - "+response.getTasks().get(position).getEmpDetails().get(0).getName()+" ("+response.getTasks().get(position).getEmpDetails().get(0).getEmpId()+")");
 

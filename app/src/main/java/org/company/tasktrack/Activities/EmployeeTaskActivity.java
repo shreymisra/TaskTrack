@@ -1,10 +1,13 @@
 package org.company.tasktrack.Activities;
 
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -96,5 +99,20 @@ public class EmployeeTaskActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public void onBackPressed() {
+            super.onBackPressed();
+    }
+    @Override
+     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId()==android.R.id.home)
+            onBackPressed();
+
+        return super.onOptionsItemSelected(item);
+
     }
 }
