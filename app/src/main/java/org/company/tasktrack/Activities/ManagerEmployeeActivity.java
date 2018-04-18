@@ -1,5 +1,6 @@
 package org.company.tasktrack.Activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,6 +44,7 @@ public class ManagerEmployeeActivity extends BaseActivity {
     ArrayList<String> employeesList=new ArrayList<String>();
     HashMap<String,Integer> hm=new HashMap<String,Integer>();
 
+    ProgressDialog progressDialog;
     EmployeesUnderManagerResponse managerResponse;
     Gson gson;
     @Override
@@ -53,9 +55,15 @@ public class ManagerEmployeeActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("Add Employees");
         gson=new Gson();
+        progressDialog=new ProgressDialog(this);
         Bundle b=getIntent().getExtras();
         String man_id=b.getString("manager_id");
+        progressDialog.setTitle("Fetching Data");
+        progressDialog.setMessage("Please wait while we fetch the list of employees ... ");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         refreshData(man_id);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -85,7 +93,11 @@ public class ManagerEmployeeActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i!=0) {
-                    Toast.makeText(getApplicationContext(), "Adding Employee ...", Toast.LENGTH_SHORT).show();
+                    progressDialog.setTitle("Adding Employee");
+                    progressDialog.setMessage("Please wait while we add this employee ... ");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                    //Toast.makeText(getApplicationContext(), "Adding Employee ...", Toast.LENGTH_SHORT).show();
 
                     AddEmployeesUnderManagerModel object = new AddEmployeesUnderManagerModel();
                     object.setEmpId(String.valueOf(hm.get(employeesList.get(i))));
@@ -97,6 +109,7 @@ public class ManagerEmployeeActivity extends BaseActivity {
                     addResponse.enqueue(new Callback<AddEmployeesUnderManagerResponse>() {
                         @Override
                         public void onResponse(Call<AddEmployeesUnderManagerResponse> call, Response<AddEmployeesUnderManagerResponse> response) {
+                            progressDialog.dismiss();
                             AddEmployeesUnderManagerResponse employeesUnderManagerResponse = response.body();
                             if (response.code() == 200) {
                                 Toast.makeText(getApplicationContext(), employeesUnderManagerResponse.getMsg(), Toast.LENGTH_LONG).show();
@@ -109,6 +122,7 @@ public class ManagerEmployeeActivity extends BaseActivity {
 
                         @Override
                         public void onFailure(Call<AddEmployeesUnderManagerResponse> call, Throwable t) {
+                            progressDialog.dismiss();
                             handleNetworkErrors(t, 1);
                         }
                     });
@@ -132,6 +146,7 @@ public class ManagerEmployeeActivity extends BaseActivity {
         call.enqueue(new Callback<EmployeesUnderManagerResponse>() {
             @Override
             public void onResponse(Call<EmployeesUnderManagerResponse> call, Response<EmployeesUnderManagerResponse> response) {
+                progressDialog.dismiss();
                 managerResponse=response.body();
                 swipeRefresh.setRefreshing(false);
                 if(response.code()==200)
@@ -146,13 +161,15 @@ public class ManagerEmployeeActivity extends BaseActivity {
                 }
                 else if(response.code()==403)
                 {
+
                     DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
                 }
             }
 
             @Override
             public void onFailure(Call<EmployeesUnderManagerResponse> call, Throwable t) {
-
+                progressDialog.dismiss();
+                handleNetworkErrors(t,1);
             }
         });
 

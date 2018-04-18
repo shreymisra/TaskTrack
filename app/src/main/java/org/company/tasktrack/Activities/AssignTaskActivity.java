@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -46,7 +47,7 @@ import retrofit2.Response;
 public class AssignTaskActivity extends BaseActivity {
 
     @BindView(R.id.employee)
-    AppCompatSpinner employee;
+    Spinner employee;
     @BindView(R.id.taskTitleLayout)
     TextInputLayout taskTitleLayout;
     @BindView(R.id.taskTitle)

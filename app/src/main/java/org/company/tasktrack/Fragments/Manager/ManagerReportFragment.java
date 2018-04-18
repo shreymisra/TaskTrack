@@ -3,6 +3,7 @@ package org.company.tasktrack.Fragments.Manager;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.google.gson.Gson;
 import org.company.tasktrack.Activities.AdminDateWiseReport;
 import org.company.tasktrack.Activities.AdminDayWiseReport;
 import org.company.tasktrack.Fragments.BaseFragment;
+import org.company.tasktrack.Networking.Models.DayWiseReportModel;
+import org.company.tasktrack.Networking.Models.DayWiseReportReponse;
 import org.company.tasktrack.Networking.Models.EmployeesUnderManagerModel;
 import org.company.tasktrack.Networking.Models.EmployeesUnderManagerResponse;
 import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
@@ -24,6 +27,7 @@ import org.company.tasktrack.Networking.Models.GetAssignedTaskModel;
 import org.company.tasktrack.Networking.Models.GetAssignedTaskResponse;
 import org.company.tasktrack.Networking.Models.UserInfoResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
+import org.company.tasktrack.Networking.Services.DayWiseReportService;
 import org.company.tasktrack.Networking.Services.EmployeesUnderManager;
 import org.company.tasktrack.Networking.Services.GetAssignedTasks;
 import org.company.tasktrack.R;
@@ -64,7 +68,8 @@ public class ManagerReportFragment extends BaseFragment {
     SelectDateFragment dateFragment;
     ArrayList<String> employeesList=new ArrayList<String>();
     HashMap<String,Integer> hm=new HashMap<String,Integer>();
-    String empName;
+    String empName="",empname="";
+    DayWiseReportModel objectReport;
     EmployeesUnderManagerResponse managerResponse;
     public static ManagerReportFragment newInstance(String param1, String param2) {
         ManagerReportFragment fragment = new ManagerReportFragment();
@@ -81,6 +86,7 @@ public class ManagerReportFragment extends BaseFragment {
         ButterKnife.bind(this,view);
 
         gson=new Gson();
+        objectReport=new DayWiseReportModel();
         UserInfoResponse infoResponse=gson.fromJson(DbHandler.getString(getContext(),"UserInfo",""),UserInfoResponse.class);
         model=new GetAssignedTaskModel();
         managerResponse=new EmployeesUnderManagerResponse();
@@ -159,7 +165,9 @@ public class ManagerReportFragment extends BaseFragment {
         empName2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                //Log.e("EmpId",gson.fromJson())
+                objectReport.setEmp_id(String.valueOf(hm.get(employeesList.get(i))));
+                empname=employeesList.get(i);
             }
 
             @Override
@@ -203,7 +211,7 @@ public class ManagerReportFragment extends BaseFragment {
                 fromDate.setClickable(true);
             }
         }, 500);
-        dateFragment.show(getFragmentManager(),sdf.format(calendar.getTime()), fromDate, "2018-01-01", "2050-01-01");
+        dateFragment.show(getFragmentManager(),sdf.format(calendar.getTime()), fromDate, "2018-01-01", sdf.format(calendar.getTime()));
 
     }
 
@@ -259,7 +267,8 @@ public class ManagerReportFragment extends BaseFragment {
 
             @Override
             public void onFailure(Call<GetAssignedTaskResponse> call, Throwable t) {
-
+           progressDialog.dismiss();
+            handleNetworkErrors(t,1);
             }
         });
         //intentWithoutFinish(AdminDateWiseReport.class);
@@ -268,6 +277,48 @@ public class ManagerReportFragment extends BaseFragment {
 
     @OnClick(R.id.dayWise)
     public void dayWiseReport(){
-        intentWithoutFinish(AdminDayWiseReport.class);
+        progressDialog.setTitle("Generating Report");
+        progressDialog.setMessage("Please wait until we generate this report ... ");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        objectReport.setDate(date.getText().toString());
+
+        DayWiseReportService dayWiseReport=ServiceGenerator.createService(DayWiseReportService.class,DbHandler.getString(getContext(),"bearer",""));
+        Call<DayWiseReportReponse>  call=dayWiseReport.report(objectReport);
+        call.enqueue(new Callback<DayWiseReportReponse>() {
+            @Override
+            public void onResponse(Call<DayWiseReportReponse> call, Response<DayWiseReportReponse> response) {
+                progressDialog.dismiss();
+                if(response.code()==200){
+                    DayWiseReportReponse reportReponse=response.body();
+                    if(reportReponse.getSuccess()) {
+                        if(reportReponse.getReport().size()!=0) {
+                            getIntentExtras().putString("ReportResponse", gson.toJson(reportReponse));
+                            getIntentExtras().putString("Emp_id", objectReport.getEmp_id());
+                            getIntentExtras().putString("Emp_name", empname);
+                            getIntentExtras().putString("Date", date.getText().toString());
+                            // getIntentExtras().putString("To",toDate.getText().toString());
+                            intentWithoutFinish(AdminDayWiseReport.class);
+                        }
+                        else{
+                            Toast.makeText(getContext(),reportReponse.getMsg(),Toast.LENGTH_LONG).show();
+                        }
+                    }else{
+                        Toast.makeText(getContext(),reportReponse.getMsg(),Toast.LENGTH_LONG).show();
+                    }
+                }
+                else{
+                    DbHandler.unsetSession(getContext(),"isForcedLoggedOut");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DayWiseReportReponse> call, Throwable t) {
+               progressDialog.dismiss();
+                handleNetworkErrors(t,1);
+            }
+        });
+
     }
 }

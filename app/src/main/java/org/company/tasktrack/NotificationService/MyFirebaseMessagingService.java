@@ -46,7 +46,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             try {
                 JSONObject json = new JSONObject(remoteMessage.getData().toString());
-                Log.e("hello", String.valueOf(json));
+               // Log.e("hello", String.valueOf(json));
                 handleDataMessage(json);
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());
@@ -86,10 +86,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Intent resultIntent = new Intent(getApplicationContext(), NotificationsActivity.class);
             resultIntent.putExtra("message", notification.getMessage());
             if (TextUtils.isEmpty(notification.getImageUrl())) {
-                Toast.makeText(getApplicationContext(),"if",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"if",Toast.LENGTH_LONG).show();
                 showNotificationMessage(getApplicationContext(), notification.getTitle(), notification.getMessage(), notification.getTimestamp(), resultIntent);
             } else {
-                Toast.makeText(getApplicationContext(),"else",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"else",Toast.LENGTH_LONG).show();
 
                 showNotificationMessageWithBigImage(getApplicationContext(), notification.getTitle(), notification.getMessage(), notification.getMessage(), resultIntent, notification.getImageUrl());
             }

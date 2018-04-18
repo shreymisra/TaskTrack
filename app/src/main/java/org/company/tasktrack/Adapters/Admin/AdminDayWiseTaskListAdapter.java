@@ -1,13 +1,18 @@
 package org.company.tasktrack.Adapters.Admin;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.company.tasktrack.Networking.Models.DayWiseReportDatum;
+import org.company.tasktrack.Networking.Models.DayWiseReportTasks;
 import org.company.tasktrack.R;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,8 +24,10 @@ import butterknife.ButterKnife;
 public class AdminDayWiseTaskListAdapter extends RecyclerView.Adapter<AdminDayWiseTaskListAdapter.viewHolder> {
 
     Context context;
-    public AdminDayWiseTaskListAdapter(Context context)
+    List<DayWiseReportTasks> response;
+    public AdminDayWiseTaskListAdapter(Context context,List<DayWiseReportTasks> response)
     {
+        this.response=response;
         this.context=context;
     }
     @Override
@@ -31,12 +38,13 @@ public class AdminDayWiseTaskListAdapter extends RecyclerView.Adapter<AdminDayWi
 
     @Override
     public void onBindViewHolder(AdminDayWiseTaskListAdapter.viewHolder holder, int position) {
-    holder.taskname.setText("Task");
+    holder.taskname.setText(response.get(position).getTask());
+   // holder.taskname.setTextColor(Color.parseColor(response.get(position).getColor()));
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return response.size();
     }
 
     public class viewHolder extends RecyclerView.ViewHolder{

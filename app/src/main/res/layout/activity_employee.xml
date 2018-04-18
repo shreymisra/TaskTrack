@@ -8,7 +8,8 @@
     android:id="@+id/swipeRefresh"
     >
 
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
@@ -18,7 +19,6 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:visibility="visible"
         android:id="@+id/l1"
         >
     <TextView
@@ -40,6 +40,22 @@
         android:id="@+id/taskList"
         android:layout_below="@+id/text"
         />
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:padding="@dimen/_10sdp"
+            android:layout_below="@+id/taskList"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:background="@color/colorAccent"
+            android:text="Request a Task"
+            android:id="@+id/request"
+            android:layout_marginLeft="@dimen/_60sdp"
+            android:layout_marginRight="@dimen/_60sdp"
+            android:layout_marginEnd="@dimen/_60sdp"
+            android:layout_marginStart="@dimen/_60sdp"
+            />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,6 +95,7 @@
         android:padding="@dimen/_8sdp"
         android:text="You haven't signed in yet ."
         android:layout_gravity="center"
+        android:id="@+id/text2"
         android:background="@color/windowBackground"
         android:textColor="#FD808080"
         android:textStyle="bold"

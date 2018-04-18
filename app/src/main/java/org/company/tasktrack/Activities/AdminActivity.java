@@ -1,5 +1,6 @@
 package org.company.tasktrack.Activities;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -55,7 +56,7 @@ public class AdminActivity extends BaseActivity {
     @BindView(R.id.container)
     FrameLayout container;
     Gson gson;
-
+    ProgressDialog progressDialog;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -79,13 +80,12 @@ public class AdminActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         ButterKnife.bind(this);
-        Log.e("id", FirebaseInstanceId.getInstance().getToken());
         refreshFcmId();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
-        //UserInfoResponse response=gson.fromJson(DbHandler.getString(getApplicationContext(),"UserInfo",""),UserInfoResponse.class);
         gson=new Gson();
+        progressDialog=new ProgressDialog(this);
         replaceFragment(new AddEmployeeFragment());
         getSupportFragmentManager()
                 .addOnBackStackChangedListener(
@@ -99,12 +99,18 @@ public class AdminActivity extends BaseActivity {
                 //invalidateOptionsMenu();
             }
         };
+
         if(!DbHandler.contains(getApplicationContext(),"Managers")) {
+            progressDialog.setTitle("Refreshing Data");
+            progressDialog.setMessage("Please wait we refresh the data");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             GetAllManagers managers = ServiceGenerator.createService(GetAllManagers.class, DbHandler.getString(getApplicationContext(), "bearer", ""));
             Call<GetAllManagersResponse> managersResponse = managers.getAllManagers();
             managersResponse.enqueue(new Callback<GetAllManagersResponse>() {
                 @Override
                 public void onResponse(Call<GetAllManagersResponse> call, Response<GetAllManagersResponse> response) {
+                   progressDialog.dismiss();
                     if (response.code() == 200) {
                         GetAllManagersResponse allManagers = response.body();
 
@@ -120,17 +126,23 @@ public class AdminActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<GetAllManagersResponse> call, Throwable t) {
+                    progressDialog.dismiss();
                     handleNetworkErrors(t, -1);
                 }
             });
         }
 
         if(!DbHandler.contains(getApplicationContext(),"Employees")) {
+            progressDialog.setTitle("Refreshing Data");
+            progressDialog.setMessage("Please wait we refresh the data");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             GetAllEmployees employees = ServiceGenerator.createService(GetAllEmployees.class, DbHandler.getString(getApplicationContext(), "bearer", ""));
             Call<GetAllEmployeesResponse> employeesResponse = employees.getAllEmployees();
             employeesResponse.enqueue(new Callback<GetAllEmployeesResponse>() {
                 @Override
                 public void onResponse(Call<GetAllEmployeesResponse> call, Response<GetAllEmployeesResponse> response) {
+                   progressDialog.dismiss();
                     if (response.code() == 200) {
                         GetAllEmployeesResponse allEmployees = response.body();
                         if (allEmployees.getSuccess())
@@ -144,6 +156,7 @@ public class AdminActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<GetAllEmployeesResponse> call, Throwable t) {
+                   progressDialog.dismiss();
                     handleNetworkErrors(t, -1);
                 }
             });

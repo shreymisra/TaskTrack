@@ -32,6 +32,14 @@
                 android:text="Title"
                 android:textSize="@dimen/_14ssp"
                 android:textStyle="bold" />
+            <ImageView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/close"
+                app:srcCompat="@drawable/ic_close_black_24dp"
+                />
 
             <TextView
                 android:layout_below="@id/title"

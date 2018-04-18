@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +23,13 @@ import org.company.tasktrack.Activities.AdminDateWiseReport;
 import org.company.tasktrack.Activities.AdminDayWiseReport;
 import org.company.tasktrack.Adapters.Admin.EmployeesAdapter;
 import org.company.tasktrack.Fragments.BaseFragment;
+import org.company.tasktrack.Networking.Models.DayWiseReportModel;
+import org.company.tasktrack.Networking.Models.DayWiseReportReponse;
 import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
 import org.company.tasktrack.Networking.Models.GetAssignedTaskModel;
 import org.company.tasktrack.Networking.Models.GetAssignedTaskResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
+import org.company.tasktrack.Networking.Services.DayWiseReportService;
 import org.company.tasktrack.Networking.Services.GetAllEmployees;
 import org.company.tasktrack.Networking.Services.GetAssignedTasks;
 import org.company.tasktrack.R;
@@ -60,6 +64,8 @@ public class AdminReportFragment extends BaseFragment {
     EditText date;
     @BindView(R.id.dayWise)
     Button dayWise;
+    @BindView(R.id.swipeRefresh)
+    SwipeRefreshLayout swipeRefreshLayout;
     Gson gson;
     GetAssignedTaskModel model;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -68,8 +74,10 @@ public class AdminReportFragment extends BaseFragment {
     HashMap<String,Integer> hm=new HashMap<String,Integer>();
     String empName="";
     View view;
+    DayWiseReportModel object;
     ProgressDialog progressDialog;
     GetAllEmployeesResponse allEmployees;
+    String empname;
     public static AdminReportFragment newInstance(String param1, String param2) {
         AdminReportFragment fragment = new AdminReportFragment();
         return fragment;
@@ -83,17 +91,25 @@ public class AdminReportFragment extends BaseFragment {
         view=inflater.inflate(R.layout.fragment_admin_report, container, false);
         ButterKnife.bind(this,view);
         model=new GetAssignedTaskModel();
+        object=new DayWiseReportModel();
+
         gson=new Gson();
         progressDialog=new ProgressDialog(getContext());
         employeesList=new ArrayList<String>();
         hm=new HashMap<String,Integer>();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
         if(!DbHandler.contains(getContext(),"Employees")){
             fetchData();
         }else {
            allEmployees=gson.fromJson(DbHandler.getString(getContext(),"Employees",""),GetAllEmployeesResponse.class);
         }
 
-        //GetAllEmployeesResponse allEmployees= gson.fromJson(DbHandler.getString(getContext(),"Employees",""),GetAllEmployeesResponse.class);
         for(int i=0;i<allEmployees.getEmployees().size();i++)
         {
             employeesList.add(allEmployees.getEmployees().get(i).getName());
@@ -104,14 +120,9 @@ public class AdminReportFragment extends BaseFragment {
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
 
-
-
         fromDate.setText(sdf.format(from.getTime()));
         toDate.setText(sdf.format(to.getTime()));
         date.setText(sdf.format(from.getTime()));
-        //fromDate.setLongClickable(false);
-        //toDate.setLongClickable(false);
-        //date.setLongClickable(false);
         dateFragment = new SelectDateFragment();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, employeesList);
@@ -136,7 +147,8 @@ public class AdminReportFragment extends BaseFragment {
         empName2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
            @Override
            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                object.setEmp_id(String.valueOf(hm.get(employeesList.get(i))));
+                empname=employeesList.get(i);
            }
 
            @Override
@@ -179,7 +191,7 @@ public class AdminReportFragment extends BaseFragment {
                 fromDate.setClickable(true);
             }
         }, 500);
-        dateFragment.show(getFragmentManager(),sdf.format(calendar.getTime()), fromDate, "2018-01-01", "2050-01-01");
+        dateFragment.show(getFragmentManager(),sdf.format(calendar.getTime()), fromDate, "2018-01-01", sdf.format(calendar.getTime()));
 
     }
 
@@ -235,7 +247,7 @@ public class AdminReportFragment extends BaseFragment {
 
             @Override
             public void onFailure(Call<GetAssignedTaskResponse> call, Throwable t) {
-
+            handleNetworkErrors(t,1);
             }
         });
 
@@ -244,7 +256,48 @@ public class AdminReportFragment extends BaseFragment {
 
     @OnClick(R.id.dayWise)
     public void dayWiseReport(){
-        intentWithoutFinish(AdminDayWiseReport.class);
+        progressDialog.setTitle("Generating Report");
+        progressDialog.setMessage("Please wait while we generate this report ... ");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        object.setDate(date.getText().toString());
+
+        DayWiseReportService dayWiseReport=ServiceGenerator.createService(DayWiseReportService.class,DbHandler.getString(getContext(),"bearer",""));
+        Call<DayWiseReportReponse>  call=dayWiseReport.report(object);
+        call.enqueue(new Callback<DayWiseReportReponse>() {
+            @Override
+            public void onResponse(Call<DayWiseReportReponse> call, Response<DayWiseReportReponse> response) {
+                progressDialog.dismiss();
+                if(response.code()==200){
+                    DayWiseReportReponse reportReponse=response.body();
+                    if(reportReponse.getSuccess()) {
+                        if(reportReponse.getReport().size()!=0) {
+                            getIntentExtras().putString("ReportResponse", gson.toJson(reportReponse));
+                            getIntentExtras().putString("Emp_id", object.getEmp_id());
+                            getIntentExtras().putString("Emp_name", empname);
+                            getIntentExtras().putString("Date", date.getText().toString());
+                            // getIntentExtras().putString("To",toDate.getText().toString());
+                            intentWithoutFinish(AdminDayWiseReport.class);
+                        }
+                        else{
+                            Toast.makeText(getContext(),reportReponse.getMsg(),Toast.LENGTH_LONG).show();
+                        }
+                    }else{
+                        Toast.makeText(getContext(),reportReponse.getMsg(),Toast.LENGTH_LONG).show();
+                    }
+                }
+                else{
+                    DbHandler.unsetSession(getContext(),"isForcedLoggedOut");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DayWiseReportReponse> call, Throwable t) {
+                progressDialog.dismiss();
+                handleNetworkErrors(t,1);
+            }
+        });
     }
 
     public void fetchData(){
@@ -253,6 +306,7 @@ public class AdminReportFragment extends BaseFragment {
         employeesResponse.enqueue(new Callback<GetAllEmployeesResponse>() {
             @Override
             public void onResponse(Call<GetAllEmployeesResponse> call, Response<GetAllEmployeesResponse> response) {
+                swipeRefreshLayout.setRefreshing(false);
                 if (response.code() == 200) {
                      allEmployees = response.body();
                     if (allEmployees.getSuccess()) {
@@ -267,6 +321,7 @@ public class AdminReportFragment extends BaseFragment {
 
             @Override
             public void onFailure(Call<GetAllEmployeesResponse> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
                 handleNetworkErrors(t, -1);
             }
         });

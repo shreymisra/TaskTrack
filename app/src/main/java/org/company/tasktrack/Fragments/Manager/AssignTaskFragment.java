@@ -2,7 +2,9 @@ package org.company.tasktrack.Fragments.Manager;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +43,7 @@ public class AssignTaskFragment extends BaseFragment {
     RecyclerView assignedTasks;
     @BindView(R.id.assignTask)
     FloatingActionButton assignTask;
+
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     View view;
     @BindView(R.id.swipeRefresh)
@@ -54,6 +57,7 @@ public class AssignTaskFragment extends BaseFragment {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,6 +71,7 @@ public class AssignTaskFragment extends BaseFragment {
            assignedTaskResponse=gson.fromJson(DbHandler.getString(getContext(),"AssignedTasks",""), GetAssignedTaskResponse.class);
             updateRecyclerView(assignedTaskResponse);
         }
+
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

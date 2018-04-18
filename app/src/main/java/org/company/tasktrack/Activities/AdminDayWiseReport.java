@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import org.company.tasktrack.Adapters.Admin.AdminDateWiseAdapter;
 import org.company.tasktrack.Adapters.Admin.AdminDayWiseAdapter;
+import org.company.tasktrack.Networking.Models.DayWiseReportReponse;
+import org.company.tasktrack.Networking.Models.GetAssignedTaskResponse;
 import org.company.tasktrack.R;
 
 import butterknife.BindView;
@@ -20,6 +22,8 @@ public class AdminDayWiseReport extends BaseActivity {
     RecyclerView tasks;
     @BindView(R.id.date)
     TextView date;
+    @BindView(R.id.name)
+    TextView name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +34,17 @@ public class AdminDayWiseReport extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("Day Wise Report");
+
+        DayWiseReportReponse response=gson.fromJson(getIntentExtras().getString("ReportResponse"),DayWiseReportReponse.class);
+        String emp_id=getIntentExtras().getString("Emp_id");
+        String emp_name=getIntentExtras().getString("Emp_name");
+        String date2=getIntentExtras().getString("Date");
+        name.setText(emp_name+" ("+ emp_id+")");
+        date.setText(date2);
+
+
         tasks.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        tasks.setAdapter(new AdminDayWiseAdapter(getApplicationContext()));
+        tasks.setAdapter(new AdminDayWiseAdapter(getApplicationContext(),response));
     }
 
     @Override

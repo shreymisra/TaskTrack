@@ -3,20 +3,14 @@ package org.company.tasktrack.Activities;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
-
-import org.company.tasktrack.Adapters.Employee.EmployeeTaskImagesAdapter;
 import org.company.tasktrack.Networking.Models.GetAssignedTasksDatum;
 import org.company.tasktrack.Networking.Models.TaskCompleteModel;
 import org.company.tasktrack.Networking.Models.TaskCompleteResponse;

@@ -13,9 +13,9 @@
     <ImageView
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        app:srcCompat="@drawable/bell"
         android:scaleType="center"
         android:visibility="gone"
+        android:src="@drawable/ic_notifications_off_black_24dp"
         android:id="@+id/bell"
         android:layout_gravity="center"
 

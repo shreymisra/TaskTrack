@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:text="Shrey Misra"
                 android:textSize="@dimen/_13ssp"
+                android:id="@+id/name"
                 android:padding="@dimen/_3sdp"
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-light"

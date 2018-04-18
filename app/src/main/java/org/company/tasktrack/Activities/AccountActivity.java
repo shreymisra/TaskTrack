@@ -12,8 +12,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.company.tasktrack.Networking.Models.FcmLogoutResponse;
 import org.company.tasktrack.Networking.Models.UserInfoResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
+import org.company.tasktrack.Networking.Services.FcmLogoutService;
 import org.company.tasktrack.Networking.Services.UserInfo;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
@@ -120,7 +122,26 @@ public class AccountActivity extends BaseActivity {
 
     @OnClick(R.id.options_logout)
     void onLogout() {
+        FcmLogoutService logoutService=ServiceGenerator.createService(FcmLogoutService.class,DbHandler.getString(getApplicationContext(),"bearer",""));
+        Call<FcmLogoutResponse> logoutResponseCall=logoutService.response();
+        logoutResponseCall.enqueue(new Callback<FcmLogoutResponse>() {
+            @Override
+            public void onResponse(Call<FcmLogoutResponse> call, Response<FcmLogoutResponse> response) {
+                if(response.code()==200){
+                    Toast.makeText(getApplicationContext(),response.body().getMsg(),Toast.LENGTH_LONG).show();
+                }else{
+                    DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FcmLogoutResponse> call, Throwable t) {
+                handleNetworkErrors(t,-1);
+            }
+        });
+
         logout();
+
     }
 
     @Override

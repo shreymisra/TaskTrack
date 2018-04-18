@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.company.tasktrack.Networking.Models.DayWiseReportReponse;
 import org.company.tasktrack.R;
 
 import butterknife.BindView;
@@ -20,8 +21,10 @@ import butterknife.ButterKnife;
 public class AdminDayWiseAdapter extends RecyclerView.Adapter<AdminDayWiseAdapter.viewHolder> {
 
     Context context;
-    public AdminDayWiseAdapter(Context context)
+    DayWiseReportReponse response;
+    public AdminDayWiseAdapter(Context context, DayWiseReportReponse response)
     {
+        this.response=response;
         this.context=context;
     }
     @Override
@@ -32,15 +35,15 @@ public class AdminDayWiseAdapter extends RecyclerView.Adapter<AdminDayWiseAdapte
 
     @Override
     public void onBindViewHolder(AdminDayWiseAdapter.viewHolder holder, int position) {
-        holder.time.setText("9:00 am - 10:00 am ");
+        holder.time.setText(response.getReport().get(position).getTimeStart()+" - "+response.getReport().get(position).getTimeEnd());
         holder.lists.setLayoutManager(new LinearLayoutManager(context));
-        holder.lists.setAdapter(new AdminDayWiseTaskListAdapter(context));
+        holder.lists.setAdapter(new AdminDayWiseTaskListAdapter(context,response.getReport().get(position).getTasks()));
 
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return response.getReport().size();
     }
 
     public class viewHolder extends RecyclerView.ViewHolder{

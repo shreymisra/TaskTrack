@@ -53,7 +53,7 @@ public class NotificationUtils {
 
 
         // notification icon
-        final int icon = R.drawable.ic_stat_splash;
+        final int icon = R.mipmap.ic_launcher;
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         final PendingIntent resultPendingIntent =
@@ -81,6 +81,10 @@ public class NotificationUtils {
                 } else {
                     showSmallNotification(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
                 }
+            }
+            else{
+                showSmallNotification(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+                playNotificationSound();
             }
         } else {
             showSmallNotification(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
