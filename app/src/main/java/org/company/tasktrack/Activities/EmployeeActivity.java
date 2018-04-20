@@ -1,6 +1,9 @@
 package org.company.tasktrack.Activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -62,6 +65,7 @@ public class EmployeeActivity extends BaseActivity {
     Button request;
     Gson gson;
     GetAssignedTaskResponse taskResponse;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,18 @@ public class EmployeeActivity extends BaseActivity {
         refreshFcmId();
         taskResponse=new GetAssignedTaskResponse();
         gson=new Gson();
+        progressDialog=new ProgressDialog(this);
+        request.setVisibility(View.GONE);
+
+       try {
+           if (getIntentExtras().getString("type").equals("remark"))
+           {
+               swipeRefreshLayout.setRefreshing(true);
+               fetchData();
+           }
+       }catch(Exception e){
+           e.printStackTrace();
+       }
 
         if(!DbHandler.contains(getApplicationContext(),"AttendanceStatus")) {
            getAttendanceStatus();
@@ -79,9 +95,13 @@ public class EmployeeActivity extends BaseActivity {
             adjustLayout(status);
         }
 
-        fetchData();
+        //fetchData();
 
         if(!DbHandler.contains(this,"PendingTasks")){
+            progressDialog.setTitle("Loading Tasks");
+            progressDialog.setMessage("Please wait until we fetch your tasks ...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             fetchData();
         } else{
             taskResponse=gson.fromJson(DbHandler.getString(this,"PendingTasks",""),GetAssignedTaskResponse.class);
@@ -119,6 +139,7 @@ public class EmployeeActivity extends BaseActivity {
             }
         });
     }
+
     public void adjustLayout(int status){
         if (status == 0) {
             out.setVisibility(View.VISIBLE);
@@ -170,10 +191,12 @@ public class EmployeeActivity extends BaseActivity {
             call.enqueue(new Callback<GetAssignedTaskResponse>() {
                 @Override
                 public void onResponse(Call<GetAssignedTaskResponse> call, Response<GetAssignedTaskResponse> response) {
+                    progressDialog.dismiss();
                     swipeRefreshLayout.setRefreshing(false);
                     if(response.code()==200){
                         taskResponse=response.body();
                         if(taskResponse.getSuccess()){
+                            DbHandler.putString(getApplicationContext(),"PendingTasks",gson.toJson(taskResponse));
                             updateRecyclerView(taskResponse);
                         }
                         else{
@@ -187,6 +210,7 @@ public class EmployeeActivity extends BaseActivity {
                 @Override
                 public void onFailure(Call<GetAssignedTaskResponse> call, Throwable t) {
                    swipeRefreshLayout.setRefreshing(false);
+                    progressDialog.dismiss();
                     handleNetworkErrors(t,-1);
                 }
             });

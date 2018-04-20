@@ -13,6 +13,12 @@ public class GetAssignedTasksDatum {
     @SerializedName("_id")
     @Expose
     private String id;
+    @SerializedName("updatedAt")
+    @Expose
+    private String updatedAt;
+    @SerializedName("createdAt")
+    @Expose
+    private String createdAt;
     @SerializedName("name")
     @Expose
     private String name;
@@ -25,38 +31,24 @@ public class GetAssignedTasksDatum {
     @SerializedName("priority")
     @Expose
     private Integer priority;
+    @SerializedName("hour_remark")
+    @Expose
+    private List<GetAssignedTasksRemarks> hourRemark = null;
     @SerializedName("task_status")
     @Expose
     private String taskStatus;
     @SerializedName("assign_date")
     @Expose
     private String assignDate;
-    @SerializedName("remark_employee")
-    @Expose
-    private String remark_employee;
-    @SerializedName("complete_date")
-    @Expose
-    private String complete_date;
     @SerializedName("emp_details")
     @Expose
     private List<GetAssignedTasksEmp> empDetails = null;
-
-
-    public String getRemark_employee() {
-        return remark_employee;
-    }
-
-    public void setRemark_employee(String remark_employee) {
-        this.remark_employee = remark_employee;
-    }
-
-    public String getComplete_date() {
-        return complete_date;
-    }
-
-    public void setComplete_date(String complete_date) {
-        this.complete_date = complete_date;
-    }
+    @SerializedName("remark_employee")
+    @Expose
+    private String remarkEmployee;
+    @SerializedName("complete_date")
+    @Expose
+    private String completeDate;
 
     public String getId() {
         return id;
@@ -64,6 +56,22 @@ public class GetAssignedTasksDatum {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getName() {
@@ -98,6 +106,14 @@ public class GetAssignedTasksDatum {
         this.priority = priority;
     }
 
+    public List<GetAssignedTasksRemarks> getHourRemark() {
+        return hourRemark;
+    }
+
+    public void setHourRemark(List<GetAssignedTasksRemarks> hourRemark) {
+        this.hourRemark = hourRemark;
+    }
+
     public String getTaskStatus() {
         return taskStatus;
     }
@@ -121,4 +137,21 @@ public class GetAssignedTasksDatum {
     public void setEmpDetails(List<GetAssignedTasksEmp> empDetails) {
         this.empDetails = empDetails;
     }
+
+    public String getRemarkEmployee() {
+        return remarkEmployee;
+    }
+
+    public void setRemarkEmployee(String remarkEmployee) {
+        this.remarkEmployee = remarkEmployee;
+    }
+
+    public String getCompleteDate() {
+        return completeDate;
+    }
+
+    public void setCompleteDate(String completeDate) {
+        this.completeDate = completeDate;
+    }
+
 }

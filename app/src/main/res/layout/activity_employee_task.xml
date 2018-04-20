@@ -7,16 +7,12 @@
     android:orientation="vertical"
     tools:context="org.company.tasktrack.Activities.EmployeeTaskActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/taskCompleted"
-        android:id="@+id/scrollView">
 
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:id="@+id/layout"
+            android:layout_alignParentTop="true"
             android:orientation="vertical"
             >
 
@@ -98,17 +94,47 @@
                     android:singleLine="false" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
-</ScrollView>
+<android.support.design.widget.FloatingActionButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:fabSize="normal"
+    android:id="@+id/previousRemarks"
+    android:layout_alignParentRight="true"
+    android:layout_above="@+id/buttons"
+    android:layout_margin="@dimen/_15sdp"
+    android:src="@drawable/ic_assignment_black_24dp"
+    />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:id="@+id/buttons"
+        android:layout_alignParentBottom="true"
+        >
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="@color/colorAccentDark"
+            android:text="Submit Remark"
+            android:layout_weight="1"
+            android:id="@+id/submitRemark"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp"
+            android:gravity="center"
+            />
     <Button
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
         android:background="@color/colorAccentDark"
         android:text="Task Completed"
         android:id="@+id/taskCompleted"
         android:fontFamily="sans-serif-light"
+        android:layout_weight="1"
         android:textColor="@color/white"
         android:textSize="@dimen/_13ssp"
         android:gravity="center"
         />
+    </LinearLayout>
 </RelativeLayout>

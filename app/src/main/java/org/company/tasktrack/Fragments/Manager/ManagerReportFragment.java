@@ -91,6 +91,7 @@ public class ManagerReportFragment extends BaseFragment {
         model=new GetAssignedTaskModel();
         managerResponse=new EmployeesUnderManagerResponse();
         progressDialog=new ProgressDialog(getContext());
+        managerResponse=new EmployeesUnderManagerResponse();
         managerResponse=gson.fromJson(DbHandler.getString(getActivity(),"EmployeesUnderMe",""),EmployeesUnderManagerResponse.class);
         if(!DbHandler.contains(getContext(),"EmployeesUnderMe")) {
             EmployeesUnderManagerModel object = new EmployeesUnderManagerModel();
@@ -105,6 +106,7 @@ public class ManagerReportFragment extends BaseFragment {
                     if (response.code() == 200) {
                         if (managerResponse.getSuccess()) {
                             DbHandler.putString(getContext(),"EmployeesUnderMe",gson.toJson(managerResponse));
+                            processWork();
                         } else {
                             Toast.makeText(getContext(), "Some Error Occured", Toast.LENGTH_SHORT).show();
                         }
@@ -118,17 +120,13 @@ public class ManagerReportFragment extends BaseFragment {
                     handleNetworkErrors(t, -1);
                 }
             });
+
         }
         else{
             managerResponse=gson.fromJson(DbHandler.getString(getContext(),"EmployeesUnderMe",""),EmployeesUnderManagerResponse.class);
+            processWork();
         }
 
-
-        for(int i=0;i<managerResponse.getEmployees().size();i++)
-        {
-            employeesList.add(managerResponse.getEmployees().get(i).getName());
-            hm.put(managerResponse.getEmployees().get(i).getName(),managerResponse.getEmployees().get(i).getEmpId());
-        }
 
 
         Calendar from = Calendar.getInstance();
@@ -142,6 +140,18 @@ public class ManagerReportFragment extends BaseFragment {
         toDate.setLongClickable(false);
         date.setLongClickable(false);
         dateFragment = new SelectDateFragment();
+
+
+        return view;
+    }
+
+    public void processWork(){
+
+        for(int i=0;i<managerResponse.getEmployees().size();i++)
+        {
+            employeesList.add(managerResponse.getEmployees().get(i).getName());
+            hm.put(managerResponse.getEmployees().get(i).getName(),managerResponse.getEmployees().get(i).getEmpId());
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, employeesList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -175,10 +185,7 @@ public class ManagerReportFragment extends BaseFragment {
 
             }
         });
-
-        return view;
     }
-
 
     @OnClick(R.id.date)
     public void selectDate(){

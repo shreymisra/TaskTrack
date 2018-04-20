@@ -1,9 +1,14 @@
 package org.company.tasktrack.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -14,8 +19,11 @@ import com.google.gson.Gson;
 import org.company.tasktrack.Networking.Models.GetAssignedTasksDatum;
 import org.company.tasktrack.Networking.Models.TaskCompleteModel;
 import org.company.tasktrack.Networking.Models.TaskCompleteResponse;
+import org.company.tasktrack.Networking.Models.WriteRemarkModel;
+import org.company.tasktrack.Networking.Models.WriteRemarkResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
 import org.company.tasktrack.Networking.Services.TaskComplete;
+import org.company.tasktrack.Networking.Services.WriteRemarkService;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
 
@@ -38,6 +46,10 @@ public class EmployeeTaskActivity extends BaseActivity {
     EditText yourRemark;
     @BindView(R.id.taskCompleted)
     Button taskCompleted;
+    @BindView(R.id.submitRemark)
+    Button submitRemark;
+    @BindView(R.id.previousRemarks)
+    FloatingActionButton previousRemarks;
     Gson gson;
     GetAssignedTasksDatum data;
     @Override
@@ -59,6 +71,7 @@ public class EmployeeTaskActivity extends BaseActivity {
         taskDesc.setText(data.getDesc());
         remarkManager.setText(data.getRemarkManager());
     }
+
     @OnClick(R.id.taskCompleted)
     public void setTaskCompleted(){
         if(yourRemark.getText().toString().equals("")){
@@ -77,6 +90,7 @@ public class EmployeeTaskActivity extends BaseActivity {
                         TaskCompleteResponse completeResponse=response.body();
                         if(completeResponse.getSuccess()){
                             Toast.makeText(EmployeeTaskActivity.this, completeResponse.getMsg(), Toast.LENGTH_LONG).show();
+                            DbHandler.remove(getApplicationContext(),"PendingTasks");
                             intentWithFinish(EmployeeActivity.class);
                         }else{
                             Toast.makeText(EmployeeTaskActivity.this,completeResponse.getMsg(),Toast.LENGTH_LONG).show();
@@ -92,6 +106,75 @@ public class EmployeeTaskActivity extends BaseActivity {
                     handleNetworkErrors(t,1);
                 }
             });
+        }
+    }
+
+
+    @OnClick(R.id.submitRemark)
+    public void submitRemark(){
+        if(yourRemark.getText().toString().equals("")){
+            Toast.makeText(this,"Please Enter Your Remark",Toast.LENGTH_SHORT).show();
+        }else {
+            WriteRemarkModel object = new WriteRemarkModel();
+            object.setRemark(yourRemark.getText().toString());
+            object.setTaskId(data.getId());
+            WriteRemarkService remarkService = ServiceGenerator.createService(WriteRemarkService.class, DbHandler.getString(getApplicationContext(), "bearer", ""));
+            Call<WriteRemarkResponse> call = remarkService.response(object);
+            call.enqueue(new Callback<WriteRemarkResponse>() {
+                @Override
+                public void onResponse(Call<WriteRemarkResponse> call, Response<WriteRemarkResponse> response) {
+                    WriteRemarkResponse remarkResponse=response.body();
+                    if(response.code()==200){
+                        Toast.makeText(getApplicationContext(),remarkResponse.getMsg(),Toast.LENGTH_LONG).show();
+                        if(remarkResponse.isSuccess()){
+                            getIntentExtras().putString("type","remark");
+                            intentWithFinish(EmployeeActivity.class);
+                        }
+                    }else if(response.code()==403){
+                        DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<WriteRemarkResponse> call, Throwable t) {
+                    handleNetworkErrors(t,1);
+                }
+            });
+        }
+    }
+
+    @OnClick(R.id.previousRemarks)
+    public void setPreviousRemarks(){
+
+        if(data.getHourRemark().size()!=0) {
+            String message = "<ul>";
+            for (int i = 0; i < data.getHourRemark().size(); i++) {
+                message = message + "<li><p>" + data.getHourRemark().get(i).getRemark() + "</p></li><br>";
+            }
+            message = message + "</ul>";
+            Spanned spanned;
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                spanned=Html.fromHtml(message,Html.FROM_HTML_MODE_COMPACT);
+            }
+            else
+            {
+                spanned=Html.fromHtml(message);
+            }
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Your Remarks")
+                    .setMessage(spanned)
+                    .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create().show();
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"No Previous Remarks",Toast.LENGTH_SHORT).show();
         }
     }
 

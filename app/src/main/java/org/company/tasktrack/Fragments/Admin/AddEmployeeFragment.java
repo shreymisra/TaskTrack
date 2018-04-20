@@ -3,10 +3,12 @@ package org.company.tasktrack.Fragments.Admin;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +36,13 @@ import org.company.tasktrack.Networking.Services.GetAllManagers;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
 
+import java.util.regex.Pattern;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,6 +93,7 @@ public class AddEmployeeFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_add_employee, container, false);
         ButterKnife.bind(this,view);
+        clearData();
         progressDialog=new ProgressDialog(getContext());
         addUserModel=new AddUserModel();
         gson=new Gson();
@@ -144,6 +151,7 @@ public class AddEmployeeFragment extends BaseFragment {
                                 }
                                 else{
                             Toast.makeText(getContext(),"Some Error Occurred",Toast.LENGTH_SHORT).show();
+                            clearData();
                         }
                     }else{
                         DbHandler.unsetSession(getContext(),"isForcedLoggedOut");
@@ -171,7 +179,19 @@ public class AddEmployeeFragment extends BaseFragment {
         }
 
         if(!phoneNumber.getText().toString().equals(""))
-            flag=flag+1;
+        {
+            if(!Pattern.matches("[a-zA-Z]+", phoneNumber.getText().toString())) {
+                if(phoneNumber.getText().toString().length() != 10) {
+                    phoneLayout.setError("Please Enter a Valid Phone Number");
+                    flag=0;
+                } else {
+                    flag=flag+1;
+                  }
+            } else {
+                phoneLayout.setError("Please Enter a Valid Phone Number");
+                flag=0;
+              }
+        }
         else
         {
             phoneLayout.setError("Field Required");
@@ -179,7 +199,14 @@ public class AddEmployeeFragment extends BaseFragment {
         }
 
         if(!email.getText().toString().equals(""))
-            flag=flag+1;
+        {
+            if(android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
+                flag=flag+1;
+             }else{
+                emailLayout.setError("Please Enter a Valid E-Mail Address");
+                flag=0;
+               }
+        }
         else
         {
             emailLayout.setError("Field Required");
@@ -194,13 +221,16 @@ public class AddEmployeeFragment extends BaseFragment {
             flag=0;
         }
 
-        if(type.getCheckedRadioButtonId()==0)
+        if(type.getCheckedRadioButtonId()==-1)
         {
             Toast.makeText(getContext(),"Select Type",Toast.LENGTH_SHORT).show();
             flag=0;
         }
         else
+        {
             flag=flag+1;
+        }
+       // Toast.makeText(getContext(),String.valueOf(type.getCheckedRadioButtonId()),Toast.LENGTH_SHORT).show();
 
 
         if(flag==5)
@@ -216,6 +246,11 @@ public class AddEmployeeFragment extends BaseFragment {
         phoneNumber.setText("");
         email.setText("");
         password.setText("");
+        nameLayout.setErrorEnabled(false);
+        phoneLayout.setErrorEnabled(false);
+        passLayout.setErrorEnabled(false);
+        emailLayout.setErrorEnabled(false);
+        type.clearCheck();
     }
 
     public void fetchEmployees(){
@@ -275,5 +310,52 @@ public class AddEmployeeFragment extends BaseFragment {
         });
     }
 
+/*
+    @OnTextChanged(R.id.name)
+    public void setName(){
+        if(name.getText().toString().equals("")){
+            nameLayout.setErrorEnabled(true);
+            nameLayout.setError("Please Enter Your Name");
+        }
+        else{
+            nameLayout.setErrorEnabled(false);
+        }
+    }
 
+    @OnTextChanged(R.id.password)
+    public void setPassword(){
+        if(password.getText().toString().equals("")){
+            passLayout.setErrorEnabled(true);
+            passLayout.setError("Please Enter Password");
+        }
+        else{
+            passLayout.setErrorEnabled(false);
+        }
+    }
+    @OnTextChanged(R.id.email)
+    public void setEmail(){
+        if(email.getText().toString().equals("")){
+            emailLayout.setErrorEnabled(true);
+            emailLayout.setError("Please Enter E-Mail");
+        }
+        else{
+            emailLayout.setErrorEnabled(false);
+        }
+    }
+
+    @OnTextChanged(R.id.phoneNumber)
+    public  void setPhone(){
+        if(phoneNumber.getText().toString().equals("")){
+            phoneLayout.setErrorEnabled(true);
+            phoneLayout.setError("Please Enter Phone Number");
+        }
+        else{
+            phoneLayout.setErrorEnabled(false);
+        }
+    }
+
+    @OnCheckedChanged(R.id.type)
+    public void setType(){
+        Toast.makeText(getContext(),String.valueOf(type.getCheckedRadioButtonId()),Toast.LENGTH_SHORT).show();
+    }*/
 }

@@ -9,12 +9,37 @@ import com.google.gson.annotations.SerializedName;
 
 public class GetAssignedTasksEmp {
 
+    @SerializedName("updatedAt")
+    @Expose
+    private String updatedAt;
+    @SerializedName("createdAt")
+    @Expose
+    private String createdAt;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("emp_id")
     @Expose
     private Integer empId;
+    @SerializedName("fcm")
+    @Expose
+    private String fcm;
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public String getName() {
         return name;
@@ -31,5 +56,14 @@ public class GetAssignedTasksEmp {
     public void setEmpId(Integer empId) {
         this.empId = empId;
     }
+
+    public String getFcm() {
+        return fcm;
+    }
+
+    public void setFcm(String fcm) {
+        this.fcm = fcm;
+    }
+
 
 }

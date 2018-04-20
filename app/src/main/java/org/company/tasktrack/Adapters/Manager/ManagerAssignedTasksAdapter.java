@@ -63,12 +63,12 @@ public class ManagerAssignedTasksAdapter extends RecyclerView.Adapter<ManagerAss
         holder.name.setText(response.getTasks().get(position).getEmpDetails().get(0).getName()+" ("+response.getTasks().get(position).getEmpDetails().get(0).getEmpId()+")");
         holder.taskTitle.setText(response.getTasks().get(position).getName());
 
-       if(response.getTasks().get(position).getComplete_date().equals("")){
+       if(response.getTasks().get(position).getCompleteDate().equals("")){
            holder.completeDate.setVisibility(View.GONE);
        }
        else{
            holder.completeDate.setVisibility(View.VISIBLE);
-           holder.completeDate.setText("Completed On - "+response.getTasks().get(position).getComplete_date());
+           holder.completeDate.setText("Completed On - "+response.getTasks().get(position).getCompleteDate());
        }
        /* Date date= null;
         try {
@@ -157,14 +157,20 @@ public class ManagerAssignedTasksAdapter extends RecyclerView.Adapter<ManagerAss
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String msg="<ul><li><b>Description</b><br><p>"+response.getTasks().get(position).getDesc()+"<p></li><br><li><b>Manager Remark</b><br><p>"+response.getTasks().get(position).getRemarkManager()+"</p></li><br><li><b>Final Remark</b><br><p>"+response.getTasks().get(position).getRemarkEmployee()+"</p></li><br><li><b>Employee's Remark</b><br><ul>";
+                for(int i=0;i<response.getTasks().get(position).getHourRemark().size();i++){
+                    msg=msg+"<li><b>"+response.getTasks().get(position).getHourRemark().get(i).getTimestamp().substring(0,10)+"  "+response.getTasks().get(position).getHourRemark().get(i).getTimestamp().substring(11,16)+"</b><br><p>" +
+                            response.getTasks().get(position).getHourRemark().get(i).getRemark()+"</p></li><br>";
+                }
+                msg=msg+"</ul></li></ul>";
+
                 Spanned message;
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                    //message=Html.fromHtml("<ul><li><b>Description</b><br><p>"+response.getTasks().get(position).getDesc()+"<p></li><br><li><b>Remark</b><br><p>"+response.getTasks().get(position).getRemarkManager()+"</p></li></ul>", Html.FROM_HTML_MODE_COMPACT);
-                    message= Html.fromHtml("<ul><li><b>Description</b><br><p>"+response.getTasks().get(position).getDesc()+"<p></li><br><li><b>Manager Remark</b><br><p>"+response.getTasks().get(position).getRemarkManager()+"</p></li><br><li><b>Employee Remark</b><br><p>"+response.getTasks().get(position).getRemark_employee()+"</p></li></ul>", Html.FROM_HTML_MODE_COMPACT);
+                       message= Html.fromHtml(msg, Html.FROM_HTML_MODE_COMPACT);
                 }
                 else{
-                   // message=Html.fromHtml("<ul><li><b>Description</b><br><p>"+response.getTasks().get(position).getDesc()+"<p></li><br><li><b>Remark</b><br><p>"+response.getTasks().get(position).getRemarkManager()+"</p></li></ul>");
-                    message= Html.fromHtml("<ul><li><b>Description</b><br><p>"+response.getTasks().get(position).getDesc()+"<p></li><br><li><b>Manager Remark</b><br><p>"+response.getTasks().get(position).getRemarkManager()+"</p></li><br><li><b>Employee Remark</b><br><p>"+response.getTasks().get(position).getRemark_employee()+"</p></li></ul>");
+                    message= Html.fromHtml(msg);
                 }
                 new AlertDialog.Builder(context)
                         .setTitle(response.getTasks().get(position).getName())

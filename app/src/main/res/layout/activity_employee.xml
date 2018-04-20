@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:visibility="gone"
         android:id="@+id/l1"
         >
     <TextView
@@ -75,7 +76,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:id="@+id/l2"
-        android:visibility="gone"
+        android:visibility="visible"
         android:animateLayoutChanges="true"
         android:layout_gravity="center_horizontal"
         android:gravity="center"

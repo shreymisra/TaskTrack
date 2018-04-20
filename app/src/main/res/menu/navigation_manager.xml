@@ -9,4 +9,9 @@
         android:id="@+id/navigation_reports2"
         android:icon="@drawable/ic_insert_chart_black_24dp"
         android:title="@string/title_reports_manager" />
+
+    <item
+        android:id="@+id/markout"
+        android:icon="@drawable/ic_markout_24dp"
+        android:title="@string/title_markout" />
 </menu>

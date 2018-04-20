@@ -51,7 +51,7 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.rxJavaAdapterVersion"
     compile "com.jakewharton.rxrelay2:rxrelay:$rootProject.rxJavaRelayVersion"
     compile 'com.github.pwittchen:reactivenetwork-rx2:0.12.2'
-
+    compile 'com.github.sd6352051:NiftyDialogEffects:v1.0.3'
     compile "com.squareup.picasso:picasso:$rootProject.picassoVersion"
     compile 'com.wdullaer:materialdatetimepicker:3.5.0'
     compile 'com.applandeo:material-calendar-view:1.4.0'

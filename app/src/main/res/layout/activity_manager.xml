@@ -7,9 +7,54 @@
     android:layout_height="match_parent"
     tools:context="org.company.tasktrack.Activities.ManagerActivity">
 
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:id="@+id/l2"
+        android:visibility="gone"
+        android:animateLayoutChanges="true"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        >
+        <ImageView
+            android:layout_height="@dimen/_150sdp"
+            android:layout_width="@dimen/_150sdp"
+            android:src="@drawable/people_1"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:padding="@dimen/_8sdp"
+            android:text="You haven't signed in yet ."
+            android:layout_gravity="center"
+            android:id="@+id/text2"
+            android:background="@color/windowBackground"
+            android:textColor="#FD808080"
+            android:textStyle="bold"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccentDark"
+            android:text="Mark Yourself Present"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:id="@+id/markAttendance"
+            />
+    </LinearLayout>
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
+        android:visibility="visible"
         android:layout_height="match_parent"
         android:layout_above="@+id/navigation" />
 
@@ -17,6 +62,7 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         android:layout_marginEnd="0dp"
         android:layout_marginStart="0dp"
         android:background="?android:attr/windowBackground"

@@ -66,6 +66,46 @@
                 android:alpha=".2"
                 android:background="@color/mdtp_transparent_black" />
 
+           <!-- <RelativeLayout
+                android:id="@+id/changePassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_42sdp"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:padding="@dimen/_12sdp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_star" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingLeft="@dimen/_40sdp"
+                    android:text="Change Password"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_right_black_24dp" />
+            </RelativeLayout>
+
+           --> <!--<View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:alpha=".2"
+                android:background="@color/mdtp_transparent_black" />
+-->
             <RelativeLayout
                 android:id="@+id/options_rate"
                 android:layout_width="match_parent"

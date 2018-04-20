@@ -28,8 +28,16 @@
         android:layout_marginStart="@dimen/_10sdp"
         android:textSize="@dimen/_15ssp"
         android:layout_gravity="center"
-        android:layout_weight="1.6"
+        android:layout_weight="1.4"
         android:id="@+id/name"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit"
+        android:layout_weight="0.2"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/ic_edit_black_24dp"
         />
     <ImageView
         android:layout_width="wrap_content"
