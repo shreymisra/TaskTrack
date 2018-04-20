@@ -25,13 +25,18 @@ import com.google.gson.Gson;
 import org.company.tasktrack.Networking.Models.FcmLogoutResponse;
 import org.company.tasktrack.Networking.Models.UpdatePasswordModel;
 import org.company.tasktrack.Networking.Models.UpdatePasswordResponse;
+import org.company.tasktrack.Networking.Models.UpdateProfileModel;
+import org.company.tasktrack.Networking.Models.UpdateProfileResponse;
 import org.company.tasktrack.Networking.Models.UserInfoResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
 import org.company.tasktrack.Networking.Services.FcmLogoutService;
 import org.company.tasktrack.Networking.Services.UpdatePassword;
+import org.company.tasktrack.Networking.Services.UpdateProfile;
 import org.company.tasktrack.Networking.Services.UserInfo;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
+
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -211,6 +216,7 @@ public class AccountActivity extends BaseActivity {
                             if (newPass.equals(confrimPass)) {
                                 Toast.makeText(getApplicationContext(), "New Password and Confirmed Password must be same .", Toast.LENGTH_SHORT).show();
                             } else {
+
                                 progressDialog.setTitle("Please Wait");
                                 progressDialog.setMessage("Changing  your password ...");
                                 progressDialog.show();
@@ -268,9 +274,55 @@ public class AccountActivity extends BaseActivity {
                 .setPositiveButton("Update", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        EditText email=(EditText)dialog.findViewById(R.id.email);
+                        EditText email2=(EditText)dialog.findViewById(R.id.email);
                         EditText phone=(EditText)dialog.findViewById(R.id.phone);
-                        dialogInterface.dismiss();
+
+                        if(email2.getText().toString().length()==0||phone.getText().toString().length()==0){
+                            Toast.makeText(getApplicationContext(),"Phone Number and Email cannot be left blank",Toast.LENGTH_SHORT).show();
+                        }else{
+                            if(android.util.Patterns.EMAIL_ADDRESS.matcher(email2.getText().toString()).matches()){
+                                if(!Pattern.matches("[a-zA-Z]+", phone.getText().toString())&&phone.getText().toString().length()==10){
+                                    progressDialog.setTitle("Please Wait");
+                                    progressDialog.setMessage("Updating your details ...");
+                                    progressDialog.show();
+
+                                    UpdateProfileModel object=new UpdateProfileModel();
+                                    object.setEmail(email2.getText().toString());
+                                    object.setMob(phone.getText().toString());
+                                    object.setEmp_id(String.valueOf(userInfoResponse.getData().getEmpId()));
+
+                                    UpdateProfile profile=ServiceGenerator.createService(UpdateProfile.class,DbHandler.getString(getApplicationContext(),"bearer",""));
+                                    Call<UpdateProfileResponse> call=profile.responseUpdate(object);
+                                    call.enqueue(new Callback<UpdateProfileResponse>() {
+                                        @Override
+                                        public void onResponse(Call<UpdateProfileResponse> call, Response<UpdateProfileResponse> response) {
+                                            progressDialog.dismiss();
+                                            UpdateProfileResponse profileResponse=response.body();
+                                            if(response.code()==200){
+                                                if(profileResponse.isSuccess())
+                                                    email.setText(email2.getText().toString());
+                                                Toast.makeText(getApplicationContext(),profileResponse.getMsg(),Toast.LENGTH_LONG).show();
+                                                dialogInterface.dismiss();
+                                            }else if(response.code()==403){
+                                                dialogInterface.dismiss();
+                                                DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<UpdateProfileResponse> call, Throwable t) {
+                                            progressDialog.dismiss();
+                                            dialogInterface.dismiss();
+                                        }
+                                    });
+                                }
+                                else{
+                                    Toast.makeText(getApplicationContext(),"Enter valid Phone Number",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(),"Enter valid E-mail",Toast.LENGTH_LONG).show();
+                            }
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

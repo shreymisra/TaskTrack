@@ -20,11 +20,16 @@ import org.company.tasktrack.Networking.Models.DeleteUserResponse;
 import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
 import org.company.tasktrack.Networking.Models.UpdatePasswordModel;
 import org.company.tasktrack.Networking.Models.UpdatePasswordResponse;
+import org.company.tasktrack.Networking.Models.UpdateProfileModel;
+import org.company.tasktrack.Networking.Models.UpdateProfileResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
 import org.company.tasktrack.Networking.Services.DeleteUserService;
 import org.company.tasktrack.Networking.Services.UpdatePassword;
+import org.company.tasktrack.Networking.Services.UpdateProfile;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
+
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -185,7 +190,52 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.view
                         }
                         else if(emailLayout.getVisibility()==View.VISIBLE && phoneLayout.getVisibility()==View.VISIBLE)
                         {
+                            if(email.getText().toString().length()==0||phone.getText().toString().length()==0){
+                                Toast.makeText(context,"Phone Number and Email cannot be left blank",Toast.LENGTH_SHORT).show();
+                            }else{
+                                if(android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
+                                    if(!Pattern.matches("[a-zA-Z]+", phone.getText().toString())&&phone.getText().toString().length()==10){
+                                        progressDialog.setTitle("Please Wait");
+                                        progressDialog.setMessage("Updating your details ...");
+                                        progressDialog.show();
 
+                                        UpdateProfileModel object=new UpdateProfileModel();
+                                        object.setEmail(email.getText().toString());
+                                        object.setMob(phone.getText().toString());
+                                        object.setEmp_id(String.valueOf(emp_id));
+
+                                        UpdateProfile profile=ServiceGenerator.createService(UpdateProfile.class,DbHandler.getString(context,"bearer",""));
+                                        Call<UpdateProfileResponse> call=profile.responseUpdate(object);
+                                        call.enqueue(new Callback<UpdateProfileResponse>() {
+                                            @Override
+                                            public void onResponse(Call<UpdateProfileResponse> call, Response<UpdateProfileResponse> response) {
+                                                progressDialog.dismiss();
+                                                UpdateProfileResponse profileResponse=response.body();
+                                                if(response.code()==200){
+                                                    if(profileResponse.isSuccess())
+                                                        email.setText(email.getText().toString());
+                                                    Toast.makeText(context,profileResponse.getMsg(),Toast.LENGTH_LONG).show();
+                                                    dialogInterface.dismiss();
+                                                }else if(response.code()==403){
+                                                    dialogInterface.dismiss();
+                                                    DbHandler.unsetSession(context,"isForcedLoggedOut");
+                                                }
+                                            }
+                                            @Override
+                                            public void onFailure(Call<UpdateProfileResponse> call, Throwable t) {
+                                                progressDialog.dismiss();
+                                                dialogInterface.dismiss();
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        Toast.makeText(context,"Enter valid Phone Number",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                                else{
+                                    Toast.makeText(context,"Enter valid E-mail",Toast.LENGTH_LONG).show();
+                                }
+                            }
                         }
                      }
                  })
