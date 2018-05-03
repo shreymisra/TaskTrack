@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -64,6 +65,8 @@ public class AdminReportFragment extends BaseFragment {
     EditText date;
     @BindView(R.id.dayWise)
     Button dayWise;
+    @BindView(R.id.scroll)
+    ScrollView scroll;
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout swipeRefreshLayout;
     Gson gson;
@@ -125,8 +128,8 @@ public class AdminReportFragment extends BaseFragment {
         date.setText(sdf.format(from.getTime()));
         dateFragment = new SelectDateFragment();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, employeesList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, employeesList);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
 
         empName1.setAdapter(adapter);
         empName1.setPrompt("Select Employee");

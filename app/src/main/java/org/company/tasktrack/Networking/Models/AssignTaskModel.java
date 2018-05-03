@@ -25,6 +25,17 @@ public class AssignTaskModel {
     @SerializedName("priority")
     @Expose
     private String priority;
+    @SerializedName("deadline")
+    @Expose
+    private String deadline;
+
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
 
     public String getName() {
         return name;

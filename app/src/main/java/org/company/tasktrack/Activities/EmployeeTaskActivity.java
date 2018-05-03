@@ -134,7 +134,6 @@ public class EmployeeTaskActivity extends BaseActivity {
                         DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
                     }
                 }
-
                 @Override
                 public void onFailure(Call<WriteRemarkResponse> call, Throwable t) {
                     handleNetworkErrors(t,1);

@@ -303,7 +303,7 @@ public class EmployeeActivity extends BaseActivity {
     @OnClick(R.id.markAttendanceOut)
     public void markAttendance2(){
         new AlertDialog.Builder(this)
-                .setMessage("Once You Logout , you won't be able to login again for the day.")
+                .setMessage("Once You Mark Out , you won't be able to mark in again for the day.")
                 .setTitle("Are You Sure ?")
                 .setPositiveButton("Mark Out", new DialogInterface.OnClickListener() {
                     @Override

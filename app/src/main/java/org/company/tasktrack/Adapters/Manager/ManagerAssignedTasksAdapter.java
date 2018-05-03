@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,17 +66,16 @@ public class ManagerAssignedTasksAdapter extends RecyclerView.Adapter<ManagerAss
 
        if(response.getTasks().get(position).getCompleteDate().equals("")){
            holder.completeDate.setVisibility(View.GONE);
+           holder.layRem.setVisibility(View.VISIBLE);
+           holder.timeRemaining.setText(response.getTasks().get(position).getRemain());
        }
        else{
+           holder.layRem.setVisibility(View.GONE);
            holder.completeDate.setVisibility(View.VISIBLE);
            holder.completeDate.setText("Completed On - "+response.getTasks().get(position).getCompleteDate());
        }
-       /* Date date= null;
-        try {
-            date = sdf1.parse(response.getTasks().get(position).getAssignDate().substring(0,10));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
+
+
         holder.date.setText("Assigned On - "+response.getTasks().get(position).getAssignDate());
 
         if(response.getTasks().get(position).getPriority()==0)
@@ -211,6 +211,10 @@ public class ManagerAssignedTasksAdapter extends RecyclerView.Adapter<ManagerAss
         ImageView status;
         @BindView(R.id.completeDate)
         TextView completeDate;
+        @BindView(R.id.time)
+        TextView timeRemaining;
+        @BindView(R.id.layRem)
+        LinearLayout layRem;
         public viewHolder(View itemView) {
             super(itemView);
 

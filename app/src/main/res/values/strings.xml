@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TaskTrack</string>
+    <string name="app_name">BK Arogyam Task Track</string>
     <string name="title_activity_admin">Administrator</string>
     <string name="title_activity_employee">Employee</string>
     <string name="title_add">Add Employees</string>

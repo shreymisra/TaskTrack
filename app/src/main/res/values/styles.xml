@@ -1,3 +1,4 @@
+
 <resources>
 
     <!-- Base application theme. -->
@@ -29,4 +30,6 @@
     <style name="ThemeOverlay.TaskTrack.BottomNavigation" parent="">
         <item name="colorPrimary">@color/colorAccent</item>
     </style>
+
+
 </resources>

@@ -46,7 +46,7 @@ public class EmployeeTaskListAdapter extends RecyclerView.Adapter<EmployeeTaskLi
         holder.date.setText("Assigned On - "+response.getTasks().get(position).getAssignDate());
         holder.taskTitle.setText(response.getTasks().get(position).getName());
         holder.assignedBy.setText("Assigned By - "+response.getTasks().get(position).getEmpDetails().get(0).getName()+" ("+response.getTasks().get(position).getEmpDetails().get(0).getEmpId()+")");
-
+        holder.timeRemaining.setText(response.getTasks().get(position).getRemain());
         if(response.getTasks().get(position).getPriority()==0)
         {
             holder.taskPriority.setText("Low Priority");
@@ -99,6 +99,8 @@ public class EmployeeTaskListAdapter extends RecyclerView.Adapter<EmployeeTaskLi
         CardView taskCard;
         @BindView(R.id.priorityCard)
         CardView priorityCard;
+        @BindView(R.id.time)
+        TextView timeRemaining;
         public viewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

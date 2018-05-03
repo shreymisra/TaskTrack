@@ -1,25 +1,26 @@
 package org.company.tasktrack.Activities;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatSpinner;
-import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import org.company.tasktrack.Adapters.Admin.EmployeesUnderManagerAdapter;
 import org.company.tasktrack.Networking.Models.AssignTaskModel;
 import org.company.tasktrack.Networking.Models.AssignTaskResponse;
 import org.company.tasktrack.Networking.Models.EmployeesUnderManagerModel;
@@ -31,11 +32,16 @@ import org.company.tasktrack.Networking.Services.EmployeesUnderManager;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import fisk.chipcloud.ChipCloud;
 import fisk.chipcloud.ChipCloudConfig;
@@ -60,6 +66,10 @@ public class AssignTaskActivity extends BaseActivity {
     TextInputLayout remarkLayout;
     @BindView(R.id.remark)
     EditText remark;
+    @BindView(R.id.taskDeadlineLayout)
+    TextInputLayout deadlineLayout;
+    @BindView(R.id.deadline)
+    EditText deadline;
     Gson gson;
     EmployeesUnderManagerResponse managerResponse;
     @BindView(R.id.filterChips)
@@ -69,6 +79,7 @@ public class AssignTaskActivity extends BaseActivity {
     HashMap<String,Integer> hm=new HashMap<String,Integer>();
     ArrayList<String> employeeList=new ArrayList<String>();
     AssignTaskModel assign;
+    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +142,7 @@ public class AssignTaskActivity extends BaseActivity {
         chipCloud.addChips(chips);
         chipCloud.setChecked(0);
         prioritySelected(0);
+        deadline.setText("");
 
         chipCloud.setListener(new ChipListener() {
             @Override
@@ -217,7 +229,7 @@ public class AssignTaskActivity extends BaseActivity {
         assign.setName(taskTitle.getText().toString());
         assign.setDesc(taskDesc.getText().toString());
         assign.setManagerRemark(remark.getText().toString());
-        if(assign.getName().equals("")||assign.getDesc().equals("")||assign.getManagerRemark().equals("")||assign.getTo().equals("")||assign.getPriority().equals("-1")){
+        if(assign.getName().equals("")||assign.getDesc().equals("")||assign.getManagerRemark().equals("")||assign.getTo().equals("")||assign.getPriority().equals("-1")||assign.getDeadline().equals("")){
             Toast.makeText(getApplicationContext(),"Please fill all the fields.",Toast.LENGTH_SHORT).show();
         }
         else{
@@ -265,11 +277,11 @@ public class AssignTaskActivity extends BaseActivity {
             employeeList.add(managerResponse.getEmployees().get(i).getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, employeeList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_item, employeeList);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         employee.setAdapter(adapter);
         employee.setPrompt("Select an employee");
+
         employee.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -281,6 +293,66 @@ public class AssignTaskActivity extends BaseActivity {
 
             }
         });
+
+    }
+
+    @OnClick(R.id.deadline)
+    public void setDeadline(){
+        deadline.setEnabled(false);
+        deadline.setClickable(false);
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                deadline.setClickable(true);
+                deadline.setEnabled(true);
+            }
+        }, 500);
+
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog datePickerDialog=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                setTime(i,i1+1,i2);
+            }
+        },now.get(Calendar.YEAR),now.get(Calendar.MONTH),now.get(Calendar.DATE));
+        datePickerDialog.getDatePicker().setMinDate(now.getTimeInMillis());
+        datePickerDialog.show();
+    }
+
+    public void  setTime(int y,int m,int d){
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+        int second=c.get(Calendar.SECOND);
+        String year=String.valueOf(y);
+        String month=String.valueOf(m);
+        String date=String.valueOf(d);
+        if(month.length()==1)
+            month="0"+month;
+        if(date.length()==1)
+            date="0"+date;
+        final String datePicked=year+"-"+month+"-"+date;
+
+        TimePickerDialog timePickerDialog=new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                String c=datePicked+" "+i+":"+i1+":00";
+                String deadlineStr=datePicked+" "+i+":"+i1+":00";
+                try {
+                    assign.setDeadline(sdf.parse(deadlineStr).toString());
+                   // Toast.makeText(AssignTaskActivity.this,sdf.parse(deadlineStr).toString(),Toast.LENGTH_SHORT).show();
+                    deadline.setText(c);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+
+
+            }
+        },hour,minute,false);
+        timePickerDialog.show();
 
     }
 }

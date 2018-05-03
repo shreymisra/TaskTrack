@@ -153,8 +153,8 @@ public class ManagerReportFragment extends BaseFragment {
             hm.put(managerResponse.getEmployees().get(i).getName(),managerResponse.getEmployees().get(i).getEmpId());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, employeesList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, employeesList);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
 
         empName1.setAdapter(adapter);
         empName1.setPrompt("Select Employee");

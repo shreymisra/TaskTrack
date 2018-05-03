@@ -50,6 +50,18 @@ public class GetAssignedTasksDatum {
     @Expose
     private String completeDate;
 
+    @SerializedName("remain")
+    @Expose
+    private String remain;
+
+    public String getRemain() {
+        return remain;
+    }
+
+    public void setRemain(String remain) {
+        this.remain = remain;
+    }
+
     public String getId() {
         return id;
     }
