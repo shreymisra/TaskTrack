@@ -14,9 +14,8 @@
     android:orientation="vertical"
     tools:context="org.company.tasktrack.Fragments.Manager.AssignTaskFragment">
 
-
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_12sdp"
         android:fontFamily="sans-serif-light"
@@ -26,6 +25,25 @@
         android:text="Today's Assigned Task"
         android:textColor="#FD808080"
         android:textStyle="bold" />
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        fab:cardCornerRadius="@dimen/_4sdp"
+        android:id="@+id/myTasks"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_alignParentRight="true"
+        fab:cardBackgroundColor="#808080"
+        >
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="My Tasks"
+            android:padding="@dimen/_5sdp"
+            android:textColor="@color/white"
+            />
+    </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

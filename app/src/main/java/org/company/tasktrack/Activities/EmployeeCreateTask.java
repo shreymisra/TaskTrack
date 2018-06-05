@@ -7,12 +7,9 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -50,10 +47,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AssignTaskActivity extends BaseActivity {
+public class EmployeeCreateTask extends BaseActivity {
 
-    @BindView(R.id.employee)
-    Spinner employee;
+
     @BindView(R.id.taskTitleLayout)
     TextInputLayout taskTitleLayout;
     @BindView(R.id.taskTitle)
@@ -80,12 +76,14 @@ public class AssignTaskActivity extends BaseActivity {
     ArrayList<String> employeeList=new ArrayList<String>();
     AssignTaskModel assign;
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    UserInfoResponse infoResponse;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assign_task);
+        setContentView(R.layout.activity_employee_create_task);
         ButterKnife.bind(this);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -93,42 +91,8 @@ public class AssignTaskActivity extends BaseActivity {
         gson=new Gson();
         assign=new AssignTaskModel();
         progressDialog=new ProgressDialog(this);
-         infoResponse=gson.fromJson(DbHandler.getString(getApplicationContext(),"UserInfo",""),UserInfoResponse.class);
-
-        if(!DbHandler.contains(getApplicationContext(),"EmployeesUnderMe")) {
-            EmployeesUnderManagerModel object = new EmployeesUnderManagerModel();
-            object.setEmp_id(String.valueOf(infoResponse.getData().getEmpId()));
-            EmployeesUnderManager employeesUnderManager = ServiceGenerator.createService(EmployeesUnderManager.class, DbHandler.getString(getApplicationContext(), "bearer", ""));
-            Call<EmployeesUnderManagerResponse> call = employeesUnderManager.employees(object);
-            call.enqueue(new Callback<EmployeesUnderManagerResponse>() {
-                @Override
-                public void onResponse(Call<EmployeesUnderManagerResponse> call, Response<EmployeesUnderManagerResponse> response) {
-                    managerResponse = response.body();
-                    //swipeRefresh.setRefreshing(false);
-                    if (response.code() == 200) {
-                        if (managerResponse.getSuccess()) {
-                           DbHandler.putString(getApplicationContext(),"EmployeesUnderMe",gson.toJson(managerResponse));
-                            processWork();
-                             } else {
-                            Toast.makeText(getApplicationContext(), "Some Error Occured", Toast.LENGTH_SHORT).show();
-                        }
-                    } else if (response.code() == 403) {
-                        DbHandler.unsetSession(getApplicationContext(), "isForcedLoggedOut");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<EmployeesUnderManagerResponse> call, Throwable t) {
-                    handleNetworkErrors(t, -1);
-                }
-            });
-        }
-        else{
-
-            managerResponse=gson.fromJson(DbHandler.getString(getApplicationContext(),"EmployeesUnderMe",""),EmployeesUnderManagerResponse.class);
-           // Toast.makeText(getApplicationContext(),gson.toJson(managerResponse),Toast.LENGTH_SHORT).show();
-            processWork();
-        }
+        UserInfoResponse infoResponse=gson.fromJson(DbHandler.getString(getApplicationContext(),"UserInfo",""),UserInfoResponse.class);
+        assign.setTo(infoResponse.getData().getEmpId().toString());
 
         ChipCloudConfig config = new ChipCloudConfig()
                 .selectMode(ChipCloud.SelectMode.single)
@@ -153,10 +117,8 @@ public class AssignTaskActivity extends BaseActivity {
                 }
             }
         });
-
-        hm.put(infoResponse.getData().getName(),infoResponse.getData().getEmpId());
-        employeeList.add(infoResponse.getData().getName());
     }
+
 
     public void prioritySelected(int n){
         assign.setPriority(String.valueOf(n));
@@ -228,8 +190,7 @@ public class AssignTaskActivity extends BaseActivity {
     }
 
     public void submitTask(){
-        if(assign.getTo().equals(infoResponse.getData().getEmpId()))
-            DbHandler.remove(getApplicationContext(),"PendingTasks");
+
         assign.setName(taskTitle.getText().toString());
         assign.setDesc(taskDesc.getText().toString());
         assign.setManagerRemark(remark.getText().toString());
@@ -254,7 +215,7 @@ public class AssignTaskActivity extends BaseActivity {
                         if(taskResponse.getSuccess()){
                             DbHandler.remove(getApplicationContext(),"AssignedTasks");
                             Toast.makeText(getApplicationContext(),taskResponse.getMsg(),Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(AssignTaskActivity.this,ManagerActivity.class));
+                            startActivity(new Intent(EmployeeCreateTask.this,EmployeeActivity.class));
                         }
                         else{
                             Toast.makeText(getApplicationContext(),taskResponse.getMsg(), Toast.LENGTH_LONG).show();
@@ -267,20 +228,19 @@ public class AssignTaskActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<AssignTaskResponse> call, Throwable t) {
-                        progressDialog.dismiss();
-                        handleNetworkErrors(t,1);
+                    progressDialog.dismiss();
+                    handleNetworkErrors(t,1);
                 }
             });
         }
     }
 
-    public void processWork()
+  /*  public void processWork()
     {
         for(int i=0;i<managerResponse.getEmployees().size();i++){
             hm.put(managerResponse.getEmployees().get(i).getName(),managerResponse.getEmployees().get(i).getEmpId());
             employeeList.add(managerResponse.getEmployees().get(i).getName());
         }
-
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_item, employeeList);
         adapter.setDropDownViewResource(R.layout.spinner_item);
@@ -299,7 +259,7 @@ public class AssignTaskActivity extends BaseActivity {
             }
         });
 
-    }
+    }*/
 
     @OnClick(R.id.deadline)
     public void setDeadline(){
@@ -347,7 +307,7 @@ public class AssignTaskActivity extends BaseActivity {
                 String deadlineStr=datePicked+" "+i+":"+i1+":00";
                 try {
                     assign.setDeadline(sdf.parse(deadlineStr).toString());
-                   // Toast.makeText(AssignTaskActivity.this,sdf.parse(deadlineStr).toString(),Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(AssignTaskActivity.this,sdf.parse(deadlineStr).toString(),Toast.LENGTH_SHORT).show();
                     deadline.setText(c);
                 }
                 catch(Exception e){

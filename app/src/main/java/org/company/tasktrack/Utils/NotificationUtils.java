@@ -107,7 +107,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(inboxStyle)
                 .setSmallIcon(icon)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.splash))
+                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.image))
                 .setContentText(message)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setVibrate(new long[0]);
@@ -129,7 +129,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(bigPictureStyle)
                 .setSmallIcon(icon)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.splash))
+                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.image))
                 .setContentText(message)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setVibrate(new long[0]);

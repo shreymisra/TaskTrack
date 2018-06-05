@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.company.tasktrack.Activities.AssignTaskActivity;
+import org.company.tasktrack.Activities.ManagerMyTasks;
 import org.company.tasktrack.Adapters.Manager.ManagerAssignedTasksAdapter;
 import org.company.tasktrack.Fragments.BaseFragment;
 import org.company.tasktrack.Networking.Models.AssignTaskResponse;
@@ -32,6 +34,7 @@ import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,6 +47,8 @@ public class AssignTaskFragment extends BaseFragment {
     @BindView(R.id.assignTask)
     FloatingActionButton assignTask;
 
+    @BindView(R.id.myTasks)
+    CardView myTasks;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     View view;
     @BindView(R.id.swipeRefresh)
@@ -129,5 +134,11 @@ public class AssignTaskFragment extends BaseFragment {
             }
         });
 
+    }
+
+    @OnClick(R.id.myTasks)
+    public void myTask()
+    {
+        intentWithoutFinish(ManagerMyTasks.class);
     }
 }

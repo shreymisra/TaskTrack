@@ -38,7 +38,10 @@ public class AdminDayWiseAdapter extends RecyclerView.Adapter<AdminDayWiseAdapte
         holder.time.setText(response.getReport().get(position).getTimeStart()+" - "+response.getReport().get(position).getTimeEnd());
         holder.lists.setLayoutManager(new LinearLayoutManager(context));
         holder.lists.setAdapter(new AdminDayWiseTaskListAdapter(context,response.getReport().get(position).getTasks()));
-
+        if(response.getReport().get(position).getRed_count().equals("1"))
+            holder.remark_status.setBackground(context.getResources().getDrawable(R.drawable.remark_no));
+        else
+            holder.remark_status.setBackground(context.getResources().getDrawable(R.drawable.remark_yes));
     }
 
     @Override
@@ -54,6 +57,8 @@ public class AdminDayWiseAdapter extends RecyclerView.Adapter<AdminDayWiseAdapte
         TextView time;
         @BindView(R.id.lists)
         RecyclerView lists;
+        @BindView(R.id.remark_status)
+        View remark_status;
 
         public viewHolder(View itemView) {
             super(itemView);

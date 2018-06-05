@@ -27,6 +27,8 @@ import org.company.tasktrack.Networking.Services.WriteRemarkService;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
 
+import java.text.SimpleDateFormat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -51,6 +53,7 @@ public class EmployeeTaskActivity extends BaseActivity {
     @BindView(R.id.previousRemarks)
     FloatingActionButton previousRemarks;
     Gson gson;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     GetAssignedTasksDatum data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +94,10 @@ public class EmployeeTaskActivity extends BaseActivity {
                         if(completeResponse.getSuccess()){
                             Toast.makeText(EmployeeTaskActivity.this, completeResponse.getMsg(), Toast.LENGTH_LONG).show();
                             DbHandler.remove(getApplicationContext(),"PendingTasks");
-                            intentWithFinish(EmployeeActivity.class);
+                            if(getIntent().getExtras().get("ty_pe").equals(2))
+                                intentWithFinish(EmployeeActivity.class);
+                            else
+                                intentWithFinish(ManagerMyTasks.class);
                         }else{
                             Toast.makeText(EmployeeTaskActivity.this,completeResponse.getMsg(),Toast.LENGTH_LONG).show();
                         }
@@ -115,6 +121,7 @@ public class EmployeeTaskActivity extends BaseActivity {
         if(yourRemark.getText().toString().equals("")){
             Toast.makeText(this,"Please Enter Your Remark",Toast.LENGTH_SHORT).show();
         }else {
+
             WriteRemarkModel object = new WriteRemarkModel();
             object.setRemark(yourRemark.getText().toString());
             object.setTaskId(data.getId());
@@ -128,7 +135,10 @@ public class EmployeeTaskActivity extends BaseActivity {
                         Toast.makeText(getApplicationContext(),remarkResponse.getMsg(),Toast.LENGTH_LONG).show();
                         if(remarkResponse.isSuccess()){
                             getIntentExtras().putString("type","remark");
-                            intentWithFinish(EmployeeActivity.class);
+                            if(getIntent().getExtras().get("ty_pe").equals(2))
+                                intentWithFinish(EmployeeActivity.class);
+                            else
+                                intentWithFinish(ManagerMyTasks.class);
                         }
                     }else if(response.code()==403){
                         DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
@@ -148,7 +158,7 @@ public class EmployeeTaskActivity extends BaseActivity {
         if(data.getHourRemark().size()!=0) {
             String message = "<ul>";
             for (int i = 0; i < data.getHourRemark().size(); i++) {
-                message = message + "<li><p>" + data.getHourRemark().get(i).getRemark() + "</p></li><br>";
+                message = message + "<li><p><b>"+data.getHourRemark().get(i).getTimestamp()+"</b><br><br>"+ data.getHourRemark().get(i).getRemark() + "</p></li><br>";
             }
             message = message + "</ul>";
             Spanned spanned;

@@ -265,6 +265,7 @@ public class AddEmployeeFragment extends BaseFragment {
                         if (allEmployees.getSuccess()) {
                             DbHandler.remove(getContext(),"Employees");
                             DbHandler.putString(getContext(), "Employees", gson.toJson(allEmployees));
+                            DbHandler.putString(getContext(), "EmployeesUnderMe", gson.toJson(allEmployees));
                         }
                         else
                             Toast.makeText(getContext(), "Error Occured", Toast.LENGTH_LONG).show();

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/tools"
     android:animateLayoutChanges="true"
-    android:id="@+id/swipeRefresh"
-    >
+    android:id="@+id/swipeRefresh">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -19,11 +18,11 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/l1"
         >
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:gravity="start|center"
@@ -34,6 +33,26 @@
         android:background="@color/windowBackground"
         android:textColor="#FD808080"
         android:textStyle="bold" />
+       <View
+           android:layout_width="@dimen/_15sdp"
+           android:layout_height="@dimen/_15sdp"
+           android:layout_toRightOf="@+id/text"
+           android:layout_marginLeft="@dimen/_10sdp"
+           android:layout_marginTop="@dimen/_8sdp"
+           android:id="@+id/dot"
+           android:background="@drawable/remark_no"
+           />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:padding="@dimen/_8sdp"
+            android:text="13"
+            android:id="@+id/dot_no"
+            android:background="@color/windowBackground"
+            android:layout_toRightOf="@+id/dot"
+            android:textColor="#FF3D00"
+            android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_height="wrap_content"
@@ -42,6 +61,18 @@
         android:layout_below="@+id/text"
         />
 
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/createTask"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/_10sdp"
+            android:layout_above="@+id/markAttendanceOut"
+            android:src="@drawable/ic_add_black_24dp"
+            fab:elevation="@dimen/_3sdp"
+            fab:fabSize="auto"
+            fab:rippleColor="@color/colorAccentDark"
+            />
         <Button
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -76,7 +107,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:id="@+id/l2"
-        android:visibility="visible"
+        android:visibility="gone"
         android:animateLayoutChanges="true"
         android:layout_gravity="center_horizontal"
         android:gravity="center"

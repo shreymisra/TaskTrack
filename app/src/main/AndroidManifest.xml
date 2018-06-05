@@ -3,8 +3,8 @@
     package="org.company.tasktrack">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
 
     <application
         android:name=".Application.MyApplication"
@@ -39,13 +39,12 @@
             android:theme="@style/Theme.TaskTrack" />
         <activity
             android:name=".Activities.AdminDateWiseReport"
-            android:theme="@style/Theme.TaskTrack"
             android:label="Date Wise Report"
-            />
+            android:theme="@style/Theme.TaskTrack" />
         <activity
             android:name=".Activities.AdminDayWiseReport"
-            android:theme="@style/Theme.TaskTrack"
-            android:label="Day Wise Report"/>
+            android:label="Day Wise Report"
+            android:theme="@style/Theme.TaskTrack" />
         <activity
             android:name=".Activities.AccountActivity"
             android:theme="@style/Theme.TaskTrack" />
@@ -60,23 +59,32 @@
         </activity>
         <activity
             android:name=".Activities.AssignTaskActivity"
-            android:theme="@style/Theme.TaskTrack"
-            android:label="Assign Task"/>
-        <activity android:name=".Activities.NotificationsActivity"
-            android:theme="@style/Theme.TaskTrack"
-            android:label="Notifications"/>
+            android:label="Assign Task"
+            android:theme="@style/Theme.TaskTrack" />
+        <activity
+            android:name=".Activities.NotificationsActivity"
+            android:label="Notifications"
+            android:theme="@style/Theme.TaskTrack" />
 
         <service android:name=".NotificationService.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".NotificationService.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".Activities.EmployeeCreateTask"
+            android:label="Assign Your Task"
+            android:theme="@style/Theme.TaskTrack" />
+        <activity android:name=".Activities.ManagerMyTasks"
+            android:label="Your Tasks"
+            android:theme="@style/Theme.TaskTrack"
+            ></activity>
     </application>
 
 </manifest>

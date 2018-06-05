@@ -2,11 +2,10 @@ package org.company.tasktrack.Activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,19 +24,26 @@ import com.google.gson.Gson;
 
 import org.company.tasktrack.Adapters.Employee.EmployeeTaskListAdapter;
 import org.company.tasktrack.Networking.Models.CheckAttendanceStatusResponse;
+import org.company.tasktrack.Networking.Models.DayWiseReportModel;
+import org.company.tasktrack.Networking.Models.DayWiseReportReponse;
 import org.company.tasktrack.Networking.Models.FcmIdModel;
 import org.company.tasktrack.Networking.Models.FcmIdResponse;
 import org.company.tasktrack.Networking.Models.GetAssignedTaskResponse;
 import org.company.tasktrack.Networking.Models.MarkAttendanceResponse;
 import org.company.tasktrack.Networking.Models.RequestTaskResponse;
+import org.company.tasktrack.Networking.Models.UserInfoResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
 import org.company.tasktrack.Networking.Services.CheckAttendanceStatus;
+import org.company.tasktrack.Networking.Services.DayWiseReportService;
 import org.company.tasktrack.Networking.Services.MarkAttendance;
 import org.company.tasktrack.Networking.Services.PendingTasks;
 import org.company.tasktrack.Networking.Services.RequestTaskService;
 import org.company.tasktrack.Networking.Services.SendFcmId;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,8 +56,12 @@ public class EmployeeActivity extends BaseActivity {
 
     @BindView(R.id.taskList)
     RecyclerView taskList;
+    @BindView(R.id.createTask)
+    FloatingActionButton createTask;
     @BindView(R.id.text2)
     TextView text2;
+    @BindView(R.id.dot_no)
+    TextView dotNo;
     @BindView(R.id.l1)
     RelativeLayout in;
     @BindView(R.id.l2)
@@ -63,9 +72,12 @@ public class EmployeeActivity extends BaseActivity {
     Button markAttButton;
     @BindView(R.id.request)
     Button request;
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     Gson gson;
     GetAssignedTaskResponse taskResponse;
     ProgressDialog progressDialog;
+    DayWiseReportModel objectReport;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +88,9 @@ public class EmployeeActivity extends BaseActivity {
         gson=new Gson();
         progressDialog=new ProgressDialog(this);
         request.setVisibility(View.GONE);
+        UserInfoResponse infoResponse=gson.fromJson(DbHandler.getString(getApplicationContext(),"UserInfo",""),UserInfoResponse.class);
 
-       try {
+        try {
            if (getIntentExtras().getString("type").equals("remark"))
            {
                swipeRefreshLayout.setRefreshing(true);
@@ -114,6 +127,44 @@ public class EmployeeActivity extends BaseActivity {
                 fetchData();
             }
         });
+
+
+
+        objectReport=new DayWiseReportModel();
+        objectReport.setDate(sdf.format(Calendar.getInstance().getTime()));
+        objectReport.setEmp_id(infoResponse.getData().getEmpId().toString());
+        DayWiseReportService dayWiseReport=ServiceGenerator.createService(DayWiseReportService.class,DbHandler.getString(getApplicationContext(),"bearer",""));
+        Call<DayWiseReportReponse>  call=dayWiseReport.report(objectReport);
+        call.enqueue(new Callback<DayWiseReportReponse>() {
+            @Override
+            public void onResponse(Call<DayWiseReportReponse> call, Response<DayWiseReportReponse> response) {
+                progressDialog.dismiss();
+                if(response.code()==200){
+                    DayWiseReportReponse reportReponse=response.body();
+                    if(reportReponse.getSuccess()) {
+                        if(reportReponse.getReport().size()!=0) {
+                            dotNo.setText(reportReponse.getRed());
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(),reportReponse.getMsg(),Toast.LENGTH_LONG).show();
+                        }
+                    }else{
+                        Toast.makeText(getApplicationContext(),reportReponse.getMsg(),Toast.LENGTH_LONG).show();
+                    }
+                }
+                else{
+                    DbHandler.unsetSession(getApplicationContext(),"isForcedLoggedOut");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DayWiseReportReponse> call, Throwable t) {
+                progressDialog.dismiss();
+                handleNetworkErrors(t,1);
+            }
+        });
+
+
 
     }
 
@@ -221,13 +272,14 @@ public class EmployeeActivity extends BaseActivity {
             request.setVisibility(View.GONE);
             taskList.setVisibility(View.VISIBLE);
             taskList.setLayoutManager(new LinearLayoutManager(this));
-            taskList.setAdapter(new EmployeeTaskListAdapter(this, response));
+            taskList.setAdapter(new EmployeeTaskListAdapter(this, response,2));
         }
         else{
             request.setVisibility(View.VISIBLE);
             taskList.setVisibility(View.GONE);
         }
     }
+
     public void refreshFcmId(){
         String fcm= FirebaseInstanceId.getInstance().getToken();
         if(!DbHandler.contains(this,"fcm_id")||!DbHandler.getString(this,"fcm_id","").equals(fcm)) {
@@ -342,6 +394,12 @@ public class EmployeeActivity extends BaseActivity {
             }
         });
     }
+
+    @OnClick(R.id.createTask)
+    public void createTask(){
+       intentWithoutFinish(EmployeeCreateTask.class);
+    }
+
     }
 
 

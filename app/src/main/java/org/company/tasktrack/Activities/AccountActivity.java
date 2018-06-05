@@ -14,12 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
-import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 import com.google.gson.Gson;
 
 import org.company.tasktrack.Networking.Models.FcmLogoutResponse;
@@ -165,6 +162,13 @@ public class AccountActivity extends BaseActivity {
         logout();
 
     }
+
+/*
+    @OnClick(R.id.options_licences)
+    void onLicences() {
+        intentWithoutFinish(OssLicensesMenuActivity.class);
+    }
+*/
 
     @Override
     public void onBackPressed() {

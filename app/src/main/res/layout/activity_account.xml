@@ -275,7 +275,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="sans-serif-light"
-                android:text="Version 1.0.0"
+                android:text="Version 1.1.0"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>

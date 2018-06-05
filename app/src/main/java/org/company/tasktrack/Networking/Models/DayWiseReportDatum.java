@@ -21,6 +21,17 @@ public class DayWiseReportDatum {
     @SerializedName("tasks")
     @Expose
     private List<DayWiseReportTasks> tasks = null;
+    @SerializedName("red_count")
+    @Expose
+    private String red_count;
+
+    public String getRed_count() {
+        return red_count;
+    }
+
+    public void setRed_count(String red_count) {
+        this.red_count = red_count;
+    }
 
     public String getTimeStart() {
         return timeStart;

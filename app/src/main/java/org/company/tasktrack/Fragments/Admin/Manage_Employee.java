@@ -2,6 +2,7 @@ package org.company.tasktrack.Fragments.Admin;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.company.tasktrack.Activities.AssignTaskActivity;
 import org.company.tasktrack.Adapters.Admin.EmployeesAdapter;
 import org.company.tasktrack.Fragments.BaseFragment;
 import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
@@ -23,6 +25,7 @@ import org.company.tasktrack.Utils.DbHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,6 +37,8 @@ public class Manage_Employee extends BaseFragment {
     @BindView(R.id.employeeList)
     RecyclerView employeeList;
     Gson gson;
+    @BindView(R.id.assignTask)
+    FloatingActionButton assignTask;
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout swipeRefresh;
     int flag=0;
@@ -101,5 +106,10 @@ public class Manage_Employee extends BaseFragment {
                 handleNetworkErrors(t, -1);
             }
         });
+    }
+
+    @OnClick(R.id.assignTask)
+    public void setAssignTask(){
+        intentWithoutFinish(AssignTaskActivity.class);
     }
 }

@@ -28,10 +28,12 @@ public class EmployeeTaskListAdapter extends RecyclerView.Adapter<EmployeeTaskLi
    int i=1;
    GetAssignedTaskResponse response;
    Gson gson;
-   public EmployeeTaskListAdapter(Context context,GetAssignedTaskResponse response){
+   int type;
+   public EmployeeTaskListAdapter(Context context,GetAssignedTaskResponse response,int type){
       this.context=context;
       this.response=response;
        gson=new Gson();
+       this.type=type;
    }
 
     @Override
@@ -74,6 +76,7 @@ public class EmployeeTaskListAdapter extends RecyclerView.Adapter<EmployeeTaskLi
                 Bundle b=new Bundle();
                 b.putString("TaskDetails",gson.toJson(response.getTasks().get(position)));
                 intent.putExtras(b);
+                intent.putExtra("ty_pe",type);
                context.startActivity(intent);
             }
         });

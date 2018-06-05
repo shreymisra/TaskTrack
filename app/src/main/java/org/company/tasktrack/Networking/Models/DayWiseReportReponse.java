@@ -20,6 +20,17 @@ public class DayWiseReportReponse {
     @SerializedName("msg")
     @Expose
     private String msg;
+    @SerializedName("red")
+    @Expose
+    private String red;
+
+    public String getRed() {
+        return red;
+    }
+
+    public void setRed(String red) {
+        this.red = red;
+    }
 
     public Boolean getSuccess() {
         return success;

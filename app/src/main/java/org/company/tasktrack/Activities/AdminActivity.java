@@ -146,7 +146,10 @@ public class AdminActivity extends BaseActivity {
                     if (response.code() == 200) {
                         GetAllEmployeesResponse allEmployees = response.body();
                         if (allEmployees.getSuccess())
+                        {
                             DbHandler.putString(getApplicationContext(), "Employees", gson.toJson(allEmployees));
+                            DbHandler.putString(getApplicationContext(), "EmployeesUnderMe", gson.toJson(allEmployees));
+                        }
                         else
                             Toast.makeText(getApplicationContext(), "Error Occured", Toast.LENGTH_LONG).show();
                     } else if (response.code() == 403) {

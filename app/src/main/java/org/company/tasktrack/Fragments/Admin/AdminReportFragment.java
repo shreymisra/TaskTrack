@@ -27,11 +27,13 @@ import org.company.tasktrack.Fragments.BaseFragment;
 import org.company.tasktrack.Networking.Models.DayWiseReportModel;
 import org.company.tasktrack.Networking.Models.DayWiseReportReponse;
 import org.company.tasktrack.Networking.Models.GetAllEmployeesResponse;
+import org.company.tasktrack.Networking.Models.GetAllManagersResponse;
 import org.company.tasktrack.Networking.Models.GetAssignedTaskModel;
 import org.company.tasktrack.Networking.Models.GetAssignedTaskResponse;
 import org.company.tasktrack.Networking.ServiceGenerator;
 import org.company.tasktrack.Networking.Services.DayWiseReportService;
 import org.company.tasktrack.Networking.Services.GetAllEmployees;
+import org.company.tasktrack.Networking.Services.GetAllManagers;
 import org.company.tasktrack.Networking.Services.GetAssignedTasks;
 import org.company.tasktrack.R;
 import org.company.tasktrack.Utils.DbHandler;
@@ -80,6 +82,7 @@ public class AdminReportFragment extends BaseFragment {
     DayWiseReportModel object;
     ProgressDialog progressDialog;
     GetAllEmployeesResponse allEmployees;
+    GetAllManagersResponse allManagers;
     String empname;
     public static AdminReportFragment newInstance(String param1, String param2) {
         AdminReportFragment fragment = new AdminReportFragment();
@@ -107,10 +110,19 @@ public class AdminReportFragment extends BaseFragment {
                 fetchData();
             }
         });
-        if(!DbHandler.contains(getContext(),"Employees")){
+        if(!DbHandler.contains(getContext(),"Employees")||!DbHandler.contains(getContext(),"Managers")){
             fetchData();
         }else {
            allEmployees=gson.fromJson(DbHandler.getString(getContext(),"Employees",""),GetAllEmployeesResponse.class);
+            allManagers=gson.fromJson(DbHandler.getString(getContext(),"Managers",""), GetAllManagersResponse.class);
+        }
+
+
+
+        for(int i=0;i<allManagers.getManagers().size();i++)
+        {
+            employeesList.add(allManagers.getManagers().get(i).getName());
+            hm.put(allManagers.getManagers().get(i).getName(),allManagers.getManagers().get(i).getEmpId());
         }
 
         for(int i=0;i<allEmployees.getEmployees().size();i++)
@@ -118,7 +130,6 @@ public class AdminReportFragment extends BaseFragment {
             employeesList.add(allEmployees.getEmployees().get(i).getName());
             hm.put(allEmployees.getEmployees().get(i).getName(),allEmployees.getEmployees().get(i).getEmpId());
         }
-
 
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
@@ -304,6 +315,7 @@ public class AdminReportFragment extends BaseFragment {
     }
 
     public void fetchData(){
+
         GetAllEmployees employees = ServiceGenerator.createService(GetAllEmployees.class, DbHandler.getString(getContext(), "bearer", ""));
         Call<GetAllEmployeesResponse> employeesResponse = employees.getAllEmployees();
         employeesResponse.enqueue(new Callback<GetAllEmployeesResponse>() {
@@ -325,6 +337,33 @@ public class AdminReportFragment extends BaseFragment {
             @Override
             public void onFailure(Call<GetAllEmployeesResponse> call, Throwable t) {
                 swipeRefreshLayout.setRefreshing(false);
+                handleNetworkErrors(t, -1);
+            }
+        });
+
+        GetAllManagers managers = ServiceGenerator.createService(GetAllManagers.class, DbHandler.getString(getContext(), "bearer", ""));
+        Call<GetAllManagersResponse> managersResponse = managers.getAllManagers();
+        managersResponse.enqueue(new Callback<GetAllManagersResponse>() {
+            @Override
+            public void onResponse(Call<GetAllManagersResponse> call, Response<GetAllManagersResponse> response) {
+
+                if (response.code() == 200) {
+                        allManagers = response.body();
+
+                    if (allManagers.getSuccess()) {
+                       // DbHandler.remove(getContext(),"Managers");
+                        DbHandler.putString(getContext(), "Managers", gson.toJson(allManagers));
+                    }
+                    else
+                        Toast.makeText(getContext(), "Error Occured", Toast.LENGTH_LONG).show();
+
+                } else if (response.code() == 403) {
+                    DbHandler.unsetSession(getContext(), "isForcedLoggedOut");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetAllManagersResponse> call, Throwable t) {
                 handleNetworkErrors(t, -1);
             }
         });
