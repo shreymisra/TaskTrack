@@ -17,8 +17,11 @@ import android.widget.ImageView;
 
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.oss.licenses.OssLicensesActivity;
 import com.google.gson.Gson;
 
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import org.company.tasktrack.Networking.Models.FcmLogoutResponse;
 import org.company.tasktrack.Networking.Models.UpdatePasswordModel;
 import org.company.tasktrack.Networking.Models.UpdatePasswordResponse;
@@ -163,12 +166,13 @@ public class AccountActivity extends BaseActivity {
 
     }
 
-/*
+
     @OnClick(R.id.options_licences)
     void onLicences() {
+        OssLicensesMenuActivity.setActivityTitle("Open source licenses");
         intentWithoutFinish(OssLicensesMenuActivity.class);
     }
-*/
+
 
     @Override
     public void onBackPressed() {
