@@ -72,6 +72,16 @@ public class Manage_Employee extends BaseFragment {
                 flag=1;
             }
         });
+        employeeList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy > 0 && assignTask.getVisibility() == View.VISIBLE)
+                    assignTask.setVisibility(View.GONE);
+                else if (dy < 0 && assignTask.getVisibility() != View.VISIBLE)
+                    assignTask.setVisibility(View.VISIBLE);
+            }
+        });
         return view;
     }
 
